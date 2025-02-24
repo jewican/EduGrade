@@ -1,6 +1,7 @@
 package com.android.edugrade
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,6 +31,24 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        supportFragmentManager.setFragmentResultListener("logout_request", this) { _, bundle ->
+            val confirmed = bundle.getBoolean("confirmed")
+            if (confirmed) {
+                finish()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val bottomSheet =
+                    LogOut()
+                bottomSheet.show(
+                    supportFragmentManager,
+                    "ModalBottomSheet"
+                )
+            }
+        })
     }
 
     private fun setCurrentFragment(fragment: Fragment) {
