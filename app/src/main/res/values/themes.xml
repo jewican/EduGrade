@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.EduGrade" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:navigationIcon">@color/black</item>
+
+        <item name="android:textColor">@color/black</item>
+    </style>
+</resources>

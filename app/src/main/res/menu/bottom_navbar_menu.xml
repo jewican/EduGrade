@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        android:icon="@drawable/home"/>
+    <item
+        android:id="@+id/scores"
+        android:title="Scores"
+        android:icon="@drawable/scores"/>
+    <item
+        android:id="@+id/subjects"
+        android:title="Subjects"
+        android:icon="@drawable/subjects"/>
+    <item
+        android:id="@+id/performance"
+        android:title="Performance"
+        android:icon="@drawable/performance"/>
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/profile"/>
+</menu>
