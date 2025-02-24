@@ -2,32 +2,33 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/perfCard"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="16dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:layout_constraintTop_toBottomOf="@id/homeGpaCard"
+    app:contentPadding="12dp"
     app:cardCornerRadius="8dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/dashboardTitle"
-    app:contentPadding="12dp">
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Performance Over Time"
-            android:textSize="14sp"
+            android:text="Subject Grade Breakdown"
+            android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <!--TODO: Temporary; Will be replaced by chart-->
-        <ImageView
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subjectGradeBreakdownList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/bar_chart"/>
+            android:layout_margin="8dp"/>
 
     </LinearLayout>
+
+
 </androidx.cardview.widget.CardView>

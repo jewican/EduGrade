@@ -5,13 +5,13 @@ import com.google.gson.reflect.TypeToken
 data class Subject(
     val name: String,
     val assessmentTypes: List<AssessmentType>,
-    val overallGrade: Float = 0f
+    val overallGrade: Double = 0.0
 )
 
 data class AssessmentType(
     val name: String,
-    val grade: Float,
-    val weight: Float
+    val grade: Double,
+    val weight: Double
 )
 
 class SubjectStorage(private val context: Context) {
