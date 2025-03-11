@@ -1,6 +1,5 @@
 package com.android.edugrade.util
 
-import Subject
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.edugrade.R
+import com.android.edugrade.models.Subject
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class SubjectBreakdownAdapter(private val subjects: List<Subject>) :

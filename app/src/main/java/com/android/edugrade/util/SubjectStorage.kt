@@ -1,18 +1,7 @@
 import android.content.Context
+import com.android.edugrade.models.Subject
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
-data class Subject(
-    val name: String,
-    val assessmentTypes: List<AssessmentType>,
-    val overallGrade: Double = 0.0
-)
-
-data class AssessmentType(
-    val name: String,
-    val grade: Double,
-    val weight: Double
-)
 
 class SubjectStorage(private val context: Context) {
     private val gson = Gson()

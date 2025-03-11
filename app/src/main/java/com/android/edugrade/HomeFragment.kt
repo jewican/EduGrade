@@ -1,7 +1,5 @@
 package com.android.edugrade
 
-import AssessmentType
-import Subject
 import SubjectStorage
 import androidx.fragment.app.Fragment
 import android.os.Bundle
@@ -10,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.databinding.FragmentHomeBinding
+import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.Subject
 import com.android.edugrade.util.SubjectBreakdownAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
