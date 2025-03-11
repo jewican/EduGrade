@@ -1,6 +1,5 @@
 package com.android.edugrade
 
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +14,13 @@ class LogOut : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v: View = inflater.inflate(
+        val view: View = inflater.inflate(
             R.layout.logout_drawer,
             container, false
         )
 
-        val confirmButton = v.findViewById<Button>(R.id.confirm_button)
-        val cancelButton = v.findViewById<Button>(R.id.cancel_button)
+        val confirmButton = view.findViewById<Button>(R.id.confirm_button)
+        val cancelButton = view.findViewById<Button>(R.id.cancel_button)
 
         confirmButton.setOnClickListener {
             parentFragmentManager.setFragmentResult("logout_request", bundleOf("confirmed" to true))
@@ -31,7 +30,7 @@ class LogOut : BottomSheetDialogFragment() {
         cancelButton.setOnClickListener {
             dismiss()
         }
-        return v
+        return view
     }
 }
 
