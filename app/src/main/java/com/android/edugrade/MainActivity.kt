@@ -5,7 +5,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment()
         val scoresFragment = ScoresFragment()
-        val subjectsFragment = SubjectsFragment()
+        val subjectsFragment = supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: SubjectsFragment()
         val performanceFragment = PerformanceFragment()
         val profileFragment = ProfileFragment()
 

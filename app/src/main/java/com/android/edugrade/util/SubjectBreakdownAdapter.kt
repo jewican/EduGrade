@@ -26,7 +26,7 @@ class SubjectBreakdownAdapter(private val subjects: List<Subject>) :
 
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
         val subject = subjects[position]
-        holder.subjectName.text = subject.name
+        holder.subjectName.text = subject.code
 
         holder.assessmentTypesList.removeAllViews()
 
@@ -34,7 +34,6 @@ class SubjectBreakdownAdapter(private val subjects: List<Subject>) :
             val assessmentView = LayoutInflater.from(holder.itemView.context)
                 .inflate(R.layout.assessment_type, holder.assessmentTypesList, false)
 
-            // Bind assessment type data
             val typeText = assessmentView.findViewById<TextView>(R.id.assessmentType)
             val gradeText = assessmentView.findViewById<TextView>(R.id.gradeValue)
             val progressIndicator = assessmentView.findViewById<LinearProgressIndicator>(R.id.gradeVisual)

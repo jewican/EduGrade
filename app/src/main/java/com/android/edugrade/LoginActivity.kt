@@ -1,11 +1,13 @@
 package com.android.edugrade
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class LoginActivity : Activity() {
+@AndroidEntryPoint
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -14,5 +16,6 @@ class LoginActivity : Activity() {
         button_login.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
+
     }
 }
