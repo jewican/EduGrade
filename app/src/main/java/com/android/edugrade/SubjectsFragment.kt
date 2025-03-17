@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.android.edugrade.databinding.FragmentSubjectsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -28,8 +29,10 @@ class SubjectsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Get subjects list
         val subjects = subjectStorage.loadSubjects()
 
+        // Create views per subject
         subjects.forEach {
             val subjectView = layoutInflater
                 .inflate(R.layout.subjects_subject_card, binding.subjectsList, false)
@@ -39,6 +42,10 @@ class SubjectsFragment : Fragment() {
 
             subjectCode.text = it.code
             subjectDescription.text = it.description
+
+            subjectView.setOnClickListener {
+                Toast.makeText(context, "To be implemented!", Toast.LENGTH_SHORT).show()
+            }
 
             binding.subjectsList.addView(subjectView)
         }

@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:src="@drawable/plus_icon"
+        android:scaleType="fitCenter"
         android:tint="@color/white"
         android:backgroundTint="@color/colorPrimary"
         android:contentDescription="Add Subject Button"

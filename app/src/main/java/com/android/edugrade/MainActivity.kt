@@ -15,11 +15,11 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val homeFragment = HomeFragment()
-        val scoresFragment = ScoresFragment()
-        val subjectsFragment = supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: SubjectsFragment()
-        val performanceFragment = PerformanceFragment()
-        val profileFragment = ProfileFragment()
+        val homeFragment = /*supportFragmentManager.findFragmentByTag("HomeFragment") ?: */HomeFragment()
+        val scoresFragment = /*supportFragmentManager.findFragmentByTag("ScoresFragment") ?: */ScoresFragment()
+        val subjectsFragment = /*supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: */SubjectsFragment()
+        val performanceFragment = /*supportFragmentManager.findFragmentByTag("PerformanceFragment") ?: */PerformanceFragment()
+        val profileFragment = /*supportFragmentManager.findFragmentByTag("ProfileFragment") ?: */ProfileFragment()
 
         setCurrentFragment(homeFragment)
 
