@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var subjectStorage: SubjectStorage
+    @Inject lateinit var subjectStorage: SubjectStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,11 +31,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         subjectStorage = SubjectStorage(requireContext())
 
-        val subjects = subjectStorage.loadSubjects()
+        subjectStorage.loadSubjects()
 
         binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = SubjectBreakdownAdapter(subjects)
+            adapter = SubjectBreakdownAdapter(subjectStorage.getSubjects())
         }
 
         binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.isNestedScrollingEnabled = false;

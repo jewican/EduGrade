@@ -15,9 +15,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SubjectsFragment : Fragment() {
-    @Inject
-    lateinit var subjectStorage: SubjectStorage
     private lateinit var binding: FragmentSubjectsBinding
+    @Inject lateinit var subjectStorage: SubjectStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +30,7 @@ class SubjectsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Get subjects list
-        val subjects = subjectStorage.loadSubjects()
+        val subjects = subjectStorage.getSubjects()
 
         // Create views per subject
         subjects.forEach {

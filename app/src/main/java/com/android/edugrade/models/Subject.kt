@@ -3,6 +3,7 @@ package com.android.edugrade.models
 data class Subject(
     val code: String,
     val description: String = "",
+    val units: Int = 0,
     val assessmentTypes: List<AssessmentType>,
     val overallGrade: Double = 0.0
 )
