@@ -49,5 +49,13 @@ class SubjectsFragment : Fragment() {
 
             binding.subjectsList.addView(subjectView)
         }
+
+        binding.addSubjectButton.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.screenFragment, AddSubjectFragment())
+                addToBackStack("")
+                commit()
+            }
+        }
     }
 }
