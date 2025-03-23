@@ -1,4 +1,4 @@
-package com.android.edugrade
+package com.android.edugrade.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.os.bundleOf
+import com.android.edugrade.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class LogOut : BottomSheetDialogFragment() {

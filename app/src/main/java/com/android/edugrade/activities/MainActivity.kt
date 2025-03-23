@@ -1,9 +1,16 @@
-package com.android.edugrade
+package com.android.edugrade.activities
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.android.edugrade.R
+import com.android.edugrade.fragments.HomeFragment
+import com.android.edugrade.fragments.LogOut
+import com.android.edugrade.fragments.PerformanceFragment
+import com.android.edugrade.fragments.ProfileFragment
+import com.android.edugrade.fragments.ScoresFragment
+import com.android.edugrade.fragments.SubjectsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,11 +22,16 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val homeFragment = /*supportFragmentManager.findFragmentByTag("HomeFragment") ?: */HomeFragment()
-        val scoresFragment = /*supportFragmentManager.findFragmentByTag("ScoresFragment") ?: */ScoresFragment()
-        val subjectsFragment = /*supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: */SubjectsFragment()
-        val performanceFragment = /*supportFragmentManager.findFragmentByTag("PerformanceFragment") ?: */PerformanceFragment()
-        val profileFragment = /*supportFragmentManager.findFragmentByTag("ProfileFragment") ?: */ProfileFragment()
+        val homeFragment = /*supportFragmentManager.findFragmentByTag("HomeFragment") ?: */
+            HomeFragment()
+        val scoresFragment = /*supportFragmentManager.findFragmentByTag("ScoresFragment") ?: */
+            ScoresFragment()
+        val subjectsFragment = /*supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: */
+            SubjectsFragment()
+        val performanceFragment = /*supportFragmentManager.findFragmentByTag("PerformanceFragment") ?: */
+            PerformanceFragment()
+        val profileFragment = /*supportFragmentManager.findFragmentByTag("ProfileFragment") ?: */
+            ProfileFragment()
 
         setCurrentFragment(homeFragment)
 

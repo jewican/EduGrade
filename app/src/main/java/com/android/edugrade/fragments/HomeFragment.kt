@@ -1,4 +1,4 @@
-package com.android.edugrade
+package com.android.edugrade.fragments
 
 import com.android.edugrade.util.SubjectStorage
 import androidx.fragment.app.Fragment
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
 

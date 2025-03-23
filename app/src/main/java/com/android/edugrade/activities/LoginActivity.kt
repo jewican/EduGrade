@@ -1,9 +1,10 @@
-package com.android.edugrade
+package com.android.edugrade.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.android.edugrade.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
