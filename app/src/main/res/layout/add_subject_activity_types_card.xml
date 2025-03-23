@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    app:layout_constraintTop_toBottomOf="@id/addSubjectTitle"
+    app:layout_constraintStart_toStartOf="parent"
+    app:cardCornerRadius="8dp"
+    app:contentPadding="12dp"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/activityTypesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="ACTIVITY TYPES"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/subjectActivityTypes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@id/activityTypesTitle"
+            android:orientation="vertical">
+
+            <include layout="@layout/add_subject_activity_types_item"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            app:layout_constraintTop_toBottomOf="@id/subjectActivityTypes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/primary_button"
+            android:text="ADD TYPE"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:paddingHorizontal="48dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
