@@ -1,20 +1,41 @@
 package com.android.edugrade.util
 
 import android.content.Context
+import android.util.Log
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
+import com.fatboyindustrial.gsonjavatime.Converters
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
-import javax.inject.Singleton
 
 class SubjectStorage(private val context: Context) {
     private lateinit var subjects: MutableList<Subject>
-    private val gson = Gson()
+    private val gson = Converters.registerLocalTime(GsonBuilder()).create();
     private val filename = "subjects.json"
 
     init {
         loadSubjects()
+    }
+
+    fun addSubject(subject: Subject) {
+        val existingIndex = subjects.indexOfFirst { it.code == subject.code }
+
+        if (existingIndex != -1) {
+            Log.e("SubjectStorage", "Subject already exists! Overwriting details.")
+            subjects[existingIndex] = subjects[existingIndex].copy(
+                description = subject.description,
+                instructor = subject.instructor,
+                timeslots = subject.timeslots,
+                assessmentTypes = subject.assessmentTypes
+            )
+        } else {
+            Log.e("SubjectStorage", "Subject not found. Adding new subject.")
+            subjects.add(subject)
+        }
+
+        saveSubjects()
     }
 
     fun getSubject(code: String): Subject {
@@ -27,20 +48,6 @@ class SubjectStorage(private val context: Context) {
     }
 
     fun getSubjects() = subjects
-
-    fun saveSubjects() {
-        val jsonString = gson.toJson(subjects)
-        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-            it.write(jsonString.toByteArray())
-        }
-    }
-
-    fun saveHardcodedSubjects(subjects: List<Subject>) {
-        val jsonString = gson.toJson(subjects)
-        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-            it.write(jsonString.toByteArray())
-        }
-    }
 
     fun loadSubjects() {
         try {
@@ -61,12 +68,12 @@ class SubjectStorage(private val context: Context) {
                         listOf(
                             AssessmentType(
                                 "Lab",
-                                4.0,
+                                0.0,
                                 0.5
                             ),
                             AssessmentType(
                                 "Lecture",
-                                4.0,
+                                0.0,
                                 0.5
                             )
                         ),
@@ -79,8 +86,17 @@ class SubjectStorage(private val context: Context) {
         }
     }
 
-    fun addSubject(subject: Subject) {
-        subjects.add(subject)
-        saveSubjects()
+    private fun saveSubjects() {
+        val jsonString = gson.toJson(subjects)
+        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+            it.write(jsonString.toByteArray())
+        }
+    }
+
+    private fun saveHardcodedSubjects(subjects: List<Subject>) {
+        val jsonString = gson.toJson(subjects)
+        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+            it.write(jsonString.toByteArray())
+        }
     }
 }

@@ -1,6 +1,8 @@
 [versions]
 agp = "8.8.1"
 gson = "2.10.1"
+gsonJavatimeSerialisers = "1.1.2"
+gsonJavatimeSerialisersVersion = "1.1.2"
 hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
@@ -19,7 +21,9 @@ constraintlayout = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+fatboyindustrial-gson-javatime-serialisers = { module = "com.fatboyindustrial.gson-javatime-serialisers:gson-javatime-serialisers", version.ref = "gsonJavatimeSerialisersVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+gson-javatime-serialisers = { module = "com.github.bastiaanjansen:gson-javatime-serialisers", version.ref = "gsonJavatimeSerialisers" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

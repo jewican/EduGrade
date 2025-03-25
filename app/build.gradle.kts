@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.kotlin.stdlib.jdk7) 
     implementation(libs.kotlin.stdlib)
+    implementation(libs.fatboyindustrial.gson.javatime.serialisers)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
