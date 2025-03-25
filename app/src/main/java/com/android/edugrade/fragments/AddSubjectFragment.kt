@@ -16,13 +16,18 @@ import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.util.SubjectStorage
 import dagger.hilt.android.AndroidEntryPoint
+import java.sql.Time
+import java.time.DayOfWeek
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddSubjectFragment(
-    val code: String? = null  // TODO: populate details when given a subject code
+    val code: String? = null
 ) : Fragment() {
     private lateinit var binding: FragmentAddSubjectBinding
     @Inject
@@ -39,21 +44,6 @@ class AddSubjectFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (code != null) {
-            binding.addSubjectButton.visibility = View.GONE
-        }
-
-        binding.timeslotsCard.initialTimeslot.timeslotTimeIn.setOnClickListener {
-            showTimePickerDialog(binding.timeslotsCard.initialTimeslot.timeslotTimeIn)
-        }
-        binding.timeslotsCard.initialTimeslot.timeslotTimeOut.setOnClickListener {
-            showTimePickerDialog(binding.timeslotsCard.initialTimeslot.timeslotTimeOut)
-        }
-
-        binding.addSubjectButton.setOnClickListener {
-            saveNewSubject()
-        }
-
         binding.timeslotsCard.addTimeslotButton.setOnClickListener {
             addTimeslot()
         }
@@ -61,6 +51,18 @@ class AddSubjectFragment(
         binding.activityTypesCard.addTypeButton.setOnClickListener {
             addActivityType()
         }
+
+        binding.addSubjectButton.setOnClickListener {
+            saveSubject()
+            parentFragmentManager.popBackStack()
+        }
+
+        if (code != null) {
+            editSubjectMode()
+            return
+        }
+
+        addTimeslot()
     }
 
     private fun addTimeslot() {
@@ -107,7 +109,7 @@ class AddSubjectFragment(
         linearLayout.addView(binding.root)
     }
 
-    private fun saveNewSubject() {
+    private fun saveSubject() {
         val code = binding.generalCard.subjectCode.text.toString()
         val description = binding.generalCard.subjectDescription.text.toString()
         val instructor = binding.generalCard.subjectInstructor.text.toString()
@@ -136,10 +138,14 @@ class AddSubjectFragment(
         var child: AddSubjectTimeslotItemBinding
         for (i in 0 until  linearLayout.childCount) {
             child = AddSubjectTimeslotItemBinding.bind(linearLayout.getChildAt(i))
+
             val (startHour, startMinute) = child.timeslotTimeIn.text.split(":").map { it.toInt() }
             val (endHour, endMinute) = child.timeslotTimeOut.text.split(":").map { it.toInt() }
+
             timeslots.add(
                 Timeslot(
+                    type = child.timeslotType.text.toString(),
+                    dayOfWeek = DayOfWeek.MONDAY, // TODO: add day of week selector in layout
                     startTime = LocalTime.of(startHour, startMinute),
                     endTime = LocalTime.of(endHour, endMinute)
                 )
@@ -154,6 +160,7 @@ class AddSubjectFragment(
         var child: AddSubjectActivityTypesItemBinding
         for (i in 0 until  linearLayout.childCount) {
             child = AddSubjectActivityTypesItemBinding.bind(linearLayout.getChildAt(i))
+
             assessmentTypes.add(
                 AssessmentType(
                     name = child.activityType.text.toString(),
@@ -169,11 +176,47 @@ class AddSubjectFragment(
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
 
-        // Display the TimePickerDialog
         TimePickerDialog(context, { _, selectedHour, selectedMinute ->
-            // Format the time with leading zeros (HH:mm)
-            val time = String.format("%02d:%02d", selectedHour, selectedMinute)
+            val time = String.format(Locale("en", "PH"), "%02d:%02d", selectedHour, selectedMinute)
             timeInput.setText(time)
         }, hour, minute, true).show()
     }
+
+    private fun editSubjectMode() {
+        val subject = subjectStorage.getSubject(code!!)
+
+        binding.generalCard.subjectCode.setText(subject.code)
+        binding.generalCard.subjectCode.focusable = View.NOT_FOCUSABLE
+
+        binding.generalCard.subjectDescription.setText(subject.description)
+        binding.generalCard.subjectInstructor.setText(subject.instructor)
+
+        var timeslotView: View
+        var timeslotBinding: AddSubjectTimeslotItemBinding
+        for (i in 0 until subject.timeslots.size) {
+            addTimeslot()
+
+            timeslotView = binding.timeslotsCard.subjectTimeslots.getChildAt(i)
+            timeslotBinding = AddSubjectTimeslotItemBinding.bind(timeslotView)
+
+            timeslotBinding.timeslotType.setText(subject.timeslots[i].type)
+            timeslotBinding.timeslotTimeIn.setText(subject.timeslots[i].startTime.toString())
+            timeslotBinding.timeslotTimeOut.setText(subject.timeslots[i].endTime.toString())
+        }
+
+        var activityTypeView: View
+        var activityTypeBinding: AddSubjectActivityTypesItemBinding
+        for (i in 0 until subject.assessmentTypes.size) {
+            addActivityType()
+
+            activityTypeView = binding.activityTypesCard.subjectActivityTypes.getChildAt(i)
+            activityTypeBinding = AddSubjectActivityTypesItemBinding.bind(activityTypeView)
+
+            activityTypeBinding.activityType.setText(subject.assessmentTypes[i].name)
+            activityTypeBinding.activityWeight.setText(subject.assessmentTypes[i].weight.toString())
+        }
+
+        binding.addSubjectButton.text = "SAVE CHANGES"
+    }
+
 }

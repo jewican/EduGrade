@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@id/activityTypesTitle"
             android:orientation="vertical">
 
-            <include layout="@layout/add_subject_activity_types_item"/>
+<!--            <include layout="@layout/add_subject_activity_types_item"/>-->
 
         </LinearLayout>
 

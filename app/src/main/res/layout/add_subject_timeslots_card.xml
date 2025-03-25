@@ -34,9 +34,8 @@
             android:layout_marginVertical="8dp"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/initialTimeslot"
-                layout="@layout/add_subject_timeslot_item"/>
+<!--            <include-->
+<!--                layout="@layout/add_subject_timeslot_item"/>-->
 
         </LinearLayout>
 
