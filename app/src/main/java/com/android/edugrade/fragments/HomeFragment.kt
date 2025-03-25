@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentHomeBinding
+import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.Subject
 import com.android.edugrade.util.SubjectBreakdownAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
-    @Inject lateinit var subjectStorage: SubjectStorage
+    @Inject
+    lateinit var subjectStorage: SubjectStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

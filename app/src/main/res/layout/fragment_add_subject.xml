@@ -17,11 +17,26 @@
             android:textStyle="bold"
             android:textSize="32sp"/>
 
-        <include layout="@layout/add_subject_general_card"/>
+        <include
+            android:id="@+id/generalCard"
+            layout="@layout/add_subject_general_card"/>
 
-        <include layout="@layout/add_subject_timeslots_card"/>
+        <include android:id="@+id/timeslotsCard"
+            layout="@layout/add_subject_timeslots_card"/>
 
-        <include layout="@layout/add_subject_activity_types_card"/>
+        <include android:id="@+id/activityTypesCard"
+            layout="@layout/add_subject_activity_types_card"/>
+
+        <Button
+            android:id="@+id/addSubjectButton"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/primary_button_filled"
+            android:text="ADD SUBJECT"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:paddingHorizontal="48dp" />
 
     </LinearLayout>
 
