@@ -33,18 +33,22 @@ class SubjectsFragment : Fragment() {
         val subjects = subjectStorage.getSubjects()
 
         // Create views per subject
-        subjects.forEach {
+        subjects.forEach { subject ->
             val subjectView = layoutInflater
                 .inflate(R.layout.subjects_subject_card, binding.subjectsList, false)
 
             val subjectCode = subjectView.findViewById<TextView>(R.id.subjectName)
             val subjectDescription = subjectView.findViewById<TextView>(R.id.subjectDescription)
 
-            subjectCode.text = it.code
-            subjectDescription.text = it.description
+            subjectCode.text = subject.code
+            subjectDescription.text = subject.description
 
             subjectView.setOnClickListener {
-                Toast.makeText(context, "To be implemented!", Toast.LENGTH_SHORT).show()
+                parentFragmentManager.beginTransaction().apply {
+                    replace(R.id.screenFragment, AddSubjectFragment(subject.code))
+                    addToBackStack("")
+                    commit()
+                }
             }
 
             binding.subjectsList.addView(subjectView)
