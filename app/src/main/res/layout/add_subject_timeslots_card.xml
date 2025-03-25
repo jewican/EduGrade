@@ -34,12 +34,14 @@
             android:layout_marginVertical="8dp"
             android:orientation="vertical">
 
-            <include layout="@layout/add_subject_timeslot_item"/>
+            <include
+                android:id="@+id/initialTimeslot"
+                layout="@layout/add_subject_timeslot_item"/>
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/addTimeslotButton"
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_gravity="center"
