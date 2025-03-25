@@ -1,5 +1,6 @@
 package com.android.edugrade.fragments
 
+import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.util.SubjectStorage
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Time
 import java.time.DayOfWeek
@@ -63,6 +65,7 @@ class AddSubjectFragment(
         }
 
         addTimeslot()
+        addActivityType()
     }
 
     private fun addTimeslot() {
@@ -217,6 +220,25 @@ class AddSubjectFragment(
         }
 
         binding.addSubjectButton.text = "SAVE CHANGES"
+
+        binding.deleteSubjectButton.visibility = View.VISIBLE
+        binding.deleteSubjectButton.setOnClickListener {
+            deleteSubject()
+        }
+    }
+
+    private fun deleteSubject() {
+        val prompt = AlertDialog.Builder(requireContext()).apply {
+            setMessage("Are you sure you want to delete $code?")
+                .setPositiveButton("Yes") { _, _ ->
+                    subjectStorage.deleteSubject(code!!)
+                    parentFragmentManager.popBackStack()
+                }
+                .setNegativeButton("No") { _, _ ->
+                }
+            create()
+        }
+        prompt.show()
     }
 
 }

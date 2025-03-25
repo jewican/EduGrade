@@ -47,6 +47,17 @@ class SubjectStorage(private val context: Context) {
         return Subject()
     }
 
+    fun deleteSubject(code: String) {
+        val index = subjects.indexOfFirst { it.code == code }
+        if (index == -1) {
+            Log.e("SubjectStorage", "Subject to delete [${code}] not found!")
+            return
+        }
+        Log.e("SubjectStorage", "[${code}] was deleted.")
+        subjects.removeAt(index)
+        saveSubjects()
+    }
+
     fun getSubjects() = subjects
 
     fun loadSubjects() {

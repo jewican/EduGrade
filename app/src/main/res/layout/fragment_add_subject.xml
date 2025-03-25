@@ -38,6 +38,19 @@
             android:textSize="16sp"
             android:paddingHorizontal="48dp" />
 
+        <Button
+            android:id="@+id/deleteSubjectButton"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/primary_button_filled"
+            android:backgroundTint="@color/black"
+            android:text="DELETE SUBJECT"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:paddingHorizontal="48dp"
+            android:visibility="gone"/>
+
     </LinearLayout>
 
 </ScrollView>
