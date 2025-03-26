@@ -16,6 +16,9 @@
         android:theme="@style/Theme.EduGrade"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ViewScoresActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddScoreActivity"
             android:exported="false" />
         <activity
