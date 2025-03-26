@@ -55,8 +55,7 @@ class AddSubjectFragment(
         }
 
         binding.addSubjectButton.setOnClickListener {
-            saveSubject()
-            parentFragmentManager.popBackStack()
+            if (saveSubject()) parentFragmentManager.popBackStack()
         }
 
         if (code != null) {
@@ -112,13 +111,20 @@ class AddSubjectFragment(
         linearLayout.addView(binding.root)
     }
 
-    private fun saveSubject() {
+    private fun saveSubject(): Boolean {
         val code = binding.generalCard.subjectCode.text.toString()
         val description = binding.generalCard.subjectDescription.text.toString()
         val instructor = binding.generalCard.subjectInstructor.text.toString()
 
-        val timeslots = getTimeslots()
-        val assessmentTypes = getAssessmentTypes()
+        var timeslots: List<Timeslot>
+        var assessmentTypes: List<AssessmentType>
+        try {
+            timeslots = getTimeslots()
+            assessmentTypes = getAssessmentTypes()
+        } catch (e: Exception) {
+            showAlert(e.message!!)
+            return false
+        }
 
         Log.wtf("AddSubjectFragment: Timeslots", timeslots.toString())
         Log.wtf("AddSubjectFragment: AssessmentTypes", assessmentTypes.toString())
@@ -133,6 +139,7 @@ class AddSubjectFragment(
                 overallGrade = 5.0
             )
         )
+        return true
     }
 
     private fun getTimeslots(): MutableList<Timeslot> {
@@ -142,17 +149,22 @@ class AddSubjectFragment(
         for (i in 0 until  linearLayout.childCount) {
             child = AddSubjectTimeslotItemBinding.bind(linearLayout.getChildAt(i))
 
-            val (startHour, startMinute) = child.timeslotTimeIn.text.split(":").map { it.toInt() }
-            val (endHour, endMinute) = child.timeslotTimeOut.text.split(":").map { it.toInt() }
+            try {
+                val (startHour, startMinute) = child.timeslotTimeIn.text.split(":")
+                    .map { it.toInt() }
+                val (endHour, endMinute) = child.timeslotTimeOut.text.split(":").map { it.toInt() }
 
-            timeslots.add(
-                Timeslot(
-                    type = child.timeslotType.text.toString(),
-                    dayOfWeek = DayOfWeek.MONDAY, // TODO: add day of week selector in layout
-                    startTime = LocalTime.of(startHour, startMinute),
-                    endTime = LocalTime.of(endHour, endMinute)
+                timeslots.add(
+                    Timeslot(
+                        type = child.timeslotType.text.toString(),
+                        dayOfWeek = DayOfWeek.MONDAY, // TODO: add day of week selector in layout
+                        startTime = LocalTime.of(startHour, startMinute),
+                        endTime = LocalTime.of(endHour, endMinute)
+                    )
                 )
-            )
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Please fill out all timeslot fields!")
+            }
         }
         return timeslots
     }
@@ -161,15 +173,19 @@ class AddSubjectFragment(
         val assessmentTypes: MutableList<AssessmentType> = mutableListOf()
         val linearLayout = binding.activityTypesCard.subjectActivityTypes
         var child: AddSubjectActivityTypesItemBinding
-        for (i in 0 until  linearLayout.childCount) {
-            child = AddSubjectActivityTypesItemBinding.bind(linearLayout.getChildAt(i))
+        try {
+            for (i in 0 until linearLayout.childCount) {
+                child = AddSubjectActivityTypesItemBinding.bind(linearLayout.getChildAt(i))
 
-            assessmentTypes.add(
-                AssessmentType(
-                    name = child.activityType.text.toString(),
-                    weight = child.activityWeight.text.toString().toDouble()
+                assessmentTypes.add(
+                    AssessmentType(
+                        name = child.activityType.text.toString(),
+                        weight = child.activityWeight.text.toString().toDouble()
+                    )
                 )
-            )
+            }
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("Please enter weights as Double (0.0 - 1.0)!")
         }
         return assessmentTypes
     }
@@ -239,6 +255,15 @@ class AddSubjectFragment(
             create()
         }
         prompt.show()
+    }
+
+    private fun showAlert(message: String) {
+        AlertDialog.Builder(requireContext()).apply {
+            setMessage(message)
+                .setPositiveButton("Ok") { _, _ ->
+                }
+            create()
+        }.show()
     }
 
 }
