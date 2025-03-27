@@ -3,7 +3,6 @@ package com.android.edugrade.activities
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.android.edugrade.R
 import com.android.edugrade.fragments.HomeFragment
 import com.android.edugrade.fragments.LogOut

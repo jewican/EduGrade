@@ -1,15 +1,14 @@
 package com.android.edugrade.fragments
 
-import com.android.edugrade.util.SubjectStorage
-import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentSubjectsBinding
+import com.android.edugrade.util.SubjectStorage
 import com.android.edugrade.util.setCurrentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,7 +21,7 @@ class SubjectsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSubjectsBinding.inflate(inflater, container, false)
         return binding.root
     }

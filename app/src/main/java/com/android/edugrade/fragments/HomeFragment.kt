@@ -1,17 +1,15 @@
 package com.android.edugrade.fragments
 
-import com.android.edugrade.util.SubjectStorage
-import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentHomeBinding
-import com.android.edugrade.models.AssessmentType
-import com.android.edugrade.models.Subject
 import com.android.edugrade.util.SubjectBreakdownAdapter
+import com.android.edugrade.util.SubjectStorage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -41,6 +39,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             adapter = SubjectBreakdownAdapter(subjectStorage.getSubjects())
         }
 
-        binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.isNestedScrollingEnabled = false;
+        binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.isNestedScrollingEnabled = false
     }
 }

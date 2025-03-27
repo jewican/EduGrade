@@ -5,14 +5,13 @@ import android.util.Log
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.fatboyindustrial.gsonjavatime.Converters
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
 
 class SubjectStorage(private val context: Context) {
     private lateinit var subjects: MutableList<Subject>
-    private val gson = Converters.registerLocalTime(GsonBuilder()).create();
+    private val gson = Converters.registerLocalTime(GsonBuilder()).create()
     private val filename = "subjects.json"
 
     init {
