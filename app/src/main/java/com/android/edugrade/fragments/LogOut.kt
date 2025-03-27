@@ -10,11 +10,16 @@ import com.android.edugrade.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class LogOut : BottomSheetDialogFragment() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.LogOutBottomSheet)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view: View = inflater.inflate(
             R.layout.logout_drawer,
             container, false
