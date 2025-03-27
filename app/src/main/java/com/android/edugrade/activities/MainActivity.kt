@@ -23,16 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val homeFragment = /*supportFragmentManager.findFragmentByTag("HomeFragment") ?: */
-            HomeFragment()
-        val scoresFragment = /*supportFragmentManager.findFragmentByTag("ScoresFragment") ?: */
-            ScoresFragment()
-        val subjectsFragment = /*supportFragmentManager.findFragmentByTag("SubjectsFragment") ?: */
-            SubjectsFragment()
-        val performanceFragment = /*supportFragmentManager.findFragmentByTag("PerformanceFragment") ?: */
-            PerformanceFragment()
-        val profileFragment = /*supportFragmentManager.findFragmentByTag("ProfileFragment") ?: */
-            ProfileFragment()
+        val homeFragment = HomeFragment()
+        val scoresFragment = ScoresFragment()
+        val subjectsFragment = SubjectsFragment()
+        val performanceFragment = PerformanceFragment()
+        val profileFragment = ProfileFragment()
 
         setCurrentFragment(homeFragment)
 
@@ -57,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount != 0) {
+                    supportFragmentManager.popBackStack()
                     return
                 }
                 val bottomSheet = LogOut()
