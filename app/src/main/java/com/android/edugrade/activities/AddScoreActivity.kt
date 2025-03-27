@@ -7,7 +7,7 @@ import com.android.edugrade.R
 class AddScoreActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_score)
+        setContentView(R.layout.fragment_add_score)
 
 
     }

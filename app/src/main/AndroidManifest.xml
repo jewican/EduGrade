@@ -25,9 +25,6 @@
             android:name=".activities.DevPageActivity"
             android:exported="false"/>
         <activity
-            android:name=".fragments.ViewScoresFragment"
-            android:exported="false" />
-        <activity
             android:name=".activities.AddScoreActivity"
             android:exported="false" />
         <activity
