@@ -11,6 +11,7 @@ import com.android.edugrade.fragments.PerformanceFragment
 import com.android.edugrade.fragments.ProfileFragment
 import com.android.edugrade.fragments.ScoresFragment
 import com.android.edugrade.fragments.SubjectsFragment
+import com.android.edugrade.util.setCurrentFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,20 +56,15 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val bottomSheet =
-                    LogOut()
+                if (supportFragmentManager.backStackEntryCount != 0) {
+                    return
+                }
+                val bottomSheet = LogOut()
                 bottomSheet.show(
                     supportFragmentManager,
                     "ModalBottomSheet"
                 )
             }
         })
-    }
-
-    private fun setCurrentFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.screenFragment, fragment)
-            commit()
-        }
     }
 }

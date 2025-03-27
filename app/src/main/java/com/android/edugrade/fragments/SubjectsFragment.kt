@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentSubjectsBinding
+import com.android.edugrade.util.setCurrentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -55,11 +56,7 @@ class SubjectsFragment : Fragment() {
         }
 
         binding.addSubjectButton.setOnClickListener {
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.screenFragment, AddSubjectFragment())
-                addToBackStack("")
-                commit()
-            }
+            setCurrentFragment(AddSubjectFragment())
         }
     }
 }
