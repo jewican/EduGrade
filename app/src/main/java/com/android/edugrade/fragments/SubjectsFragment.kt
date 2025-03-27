@@ -45,11 +45,7 @@ class SubjectsFragment : Fragment() {
             subjectDescription.text = subject.description
 
             subjectView.setOnClickListener {
-                parentFragmentManager.beginTransaction().apply {
-                    replace(R.id.screenFragment, AddSubjectFragment(subject.code))
-                    addToBackStack("")
-                    commit()
-                }
+                setCurrentFragment(AddSubjectFragment(subject.code))
             }
 
             binding.subjectsList.addView(subjectView)
