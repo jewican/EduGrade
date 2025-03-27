@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentSubjectsBinding
-import com.android.edugrade.util.SubjectStorage
+import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.util.setCurrentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

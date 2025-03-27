@@ -15,7 +15,7 @@ import com.android.edugrade.databinding.FragmentAddSubjectBinding
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
-import com.android.edugrade.util.SubjectStorage
+import com.android.edugrade.data.subject.SubjectStorage
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalTime

@@ -1,4 +1,4 @@
-package com.android.edugrade.util
+package com.android.edugrade.data.subject
 
 import android.content.Context
 import android.util.Log

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
-import com.android.edugrade.util.SubjectStorage
+import com.android.edugrade.data.subject.SubjectStorage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

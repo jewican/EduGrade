@@ -1,7 +1,7 @@
 package com.android.edugrade.di
 
 import android.content.Context
-import com.android.edugrade.util.SubjectStorage
+import com.android.edugrade.data.subject.SubjectStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
