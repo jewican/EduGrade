@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".fragments.ViewScoresFragment"
-    android:padding="20dp">
+    android:background="@color/screenBackground">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="View Scores"
+            android:textStyle="bold"
+            android:textSize="32sp"/>
+
+        <ListView
+            android:id="@+id/lv_act"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addScoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Scores"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/plus_icon"
+        android:scaleType="fitCenter"
+        android:tint="@color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="Add Subject Button"
+        app:useCompatPadding="true"/>
 
-    <ListView
-        android:id="@+id/lv_act"
-        android:layout_width="wrap_content"
-        android:layout_height="560dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add"
-        android:background="@drawable/primary_button"/>
-
-</LinearLayout>
+</FrameLayout>
