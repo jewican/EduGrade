@@ -13,15 +13,4 @@ data class Subject(
     val overallGrade: Double = 0.0
 )
 
-data class Timeslot(
-    val type: String,
-    val dayOfWeek: DayOfWeek,
-    val startTime: LocalTime,
-    val endTime: LocalTime
-)
 
-data class AssessmentType(
-    val name: String = "",
-    val grade: Double = 0.0,
-    val weight: Double = 0.0
-)
