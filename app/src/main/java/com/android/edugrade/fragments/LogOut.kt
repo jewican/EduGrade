@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.os.bundleOf
 import com.android.edugrade.R
+import com.android.edugrade.databinding.LogoutDrawerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Firebase
+import com.google.firebase.app
+import com.google.firebase.auth.auth
 
 class LogOut : BottomSheetDialogFragment() {
+    private lateinit var binding: LogoutDrawerBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.LogOutBottomSheet)
@@ -20,23 +26,19 @@ class LogOut : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(
-            R.layout.logout_drawer,
-            container, false
-        )
+        binding = LogoutDrawerBinding.inflate(layoutInflater)
 
-        val confirmButton = view.findViewById<Button>(R.id.confirm_button)
-        val cancelButton = view.findViewById<Button>(R.id.cancel_button)
-
-        confirmButton.setOnClickListener {
+        binding.confirmButton.setOnClickListener {
             parentFragmentManager.setFragmentResult("logout_request", bundleOf("confirmed" to true))
+            Firebase.auth.signOut()
             dismiss()
         }
 
-        cancelButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             dismiss()
         }
-        return view
+
+        return binding.root
     }
 }
 

@@ -12,13 +12,20 @@ import com.android.edugrade.fragments.ScoresFragment
 import com.android.edugrade.fragments.SubjectsFragment
 import com.android.edugrade.util.setCurrentFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var user: FirebaseUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        user = Firebase.auth.currentUser!!
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
