@@ -22,7 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/timeslotTimeIn"
         android:layout_marginVertical="6dp"
-        android:background="@drawable/textinput_box" />
+        android:background="@drawable/textinput_box"
+        android:inputType="text"/>
 
     <TextView
         android:id="@+id/timeslotTimeInTitle"
@@ -43,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="@id/timeslotTimeOut"
         android:layout_marginVertical="6dp"
         android:background="@drawable/textinput_box"
-        android:focusable="false"/>
+        android:focusable="false"
+        android:inputType="time"/>
 
     <TextView
         android:id="@+id/timeslotTimeOutTitle"
@@ -64,7 +66,8 @@
         app:layout_constraintEnd_toStartOf="@id/deleteTimeslotButton"
         android:layout_marginVertical="6dp"
         android:background="@drawable/textinput_box"
-        android:focusable="false" />
+        android:focusable="false"
+        android:inputType="time"/>
 
     <Button
         android:id="@+id/deleteTimeslotButton"

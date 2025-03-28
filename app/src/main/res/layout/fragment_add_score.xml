@@ -75,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/textinput_box"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:inputType="text"/>
 
         </LinearLayout>
 
@@ -103,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:background="@drawable/textinput_box"/>
+                android:background="@drawable/textinput_box"
+                android:inputType="numberDecimal"/>
 
         </LinearLayout>
 
@@ -131,7 +133,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:background="@drawable/textinput_box"/>
+                android:background="@drawable/textinput_box"
+                android:inputType="numberDecimal"/>
 
         </LinearLayout>
 
