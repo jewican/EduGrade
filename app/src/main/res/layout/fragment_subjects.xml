@@ -27,7 +27,7 @@
                 android:textStyle="bold"
                 android:textSize="32sp"/>
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/subjectsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

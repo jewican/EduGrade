@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.databinding.FragmentSubjectsBinding
 import com.android.edugrade.data.subject.SubjectStorage
+import com.android.edugrade.util.SubjectCardAdapter
 import com.android.edugrade.util.setCurrentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,22 +34,13 @@ class SubjectsFragment : Fragment() {
         // Get subjects list
         val subjects = subjectStorage.getSubjects()
 
-        // Create views per subject
-        subjects.forEach { subject ->
-            val subjectView = layoutInflater
-                .inflate(R.layout.subjects_subject_card, binding.subjectsList, false)
-
-            val subjectCode = subjectView.findViewById<TextView>(R.id.subjectName)
-            val subjectDescription = subjectView.findViewById<TextView>(R.id.subjectDescription)
-
-            subjectCode.text = subject.code
-            subjectDescription.text = subject.description
-
-            subjectView.setOnClickListener {
-                setCurrentFragment(AddSubjectFragment(subject.code))
-            }
-
-            binding.subjectsList.addView(subjectView)
+        binding.subjectsList.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = SubjectCardAdapter(
+                subjects = subjects,
+                onClick = { code ->
+                    setCurrentFragment(AddSubjectFragment(code))
+                })
         }
 
         binding.addSubjectButton.setOnClickListener {
