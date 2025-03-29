@@ -73,7 +73,16 @@ class SubjectStorage {
             }
     }
 
-    fun getSubjects() = subjects
+    fun getSubjects(): List<Subject> = subjects
+
+    fun getAssessmentTypes(code: String): List<AssessmentType> {
+        val index = subjects.indexOfFirst { it.code == code }
+        if (index == -1) {
+            Log.e("SubjectStorage", "Subject [${code}] not found! Returning empty assessment list")
+            return listOf()
+        }
+        return subjects[index].assessmentTypes
+    }
 
     fun loadSubjects() {
         val userId = auth.currentUser!!.uid
