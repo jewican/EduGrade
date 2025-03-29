@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         setCurrentFragment(homeFragment)
 
         bottomNavigationView.setOnItemSelectedListener {
+            while (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStackImmediate()
+            }
             when (it.itemId) {
                 R.id.home -> setCurrentFragment(homeFragment)
                 R.id.scores -> setCurrentFragment(scoresFragment)
