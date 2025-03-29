@@ -50,6 +50,8 @@ class ScoreStorage {
             }
     }
 
+    fun getScores(): List<Score> = scores
+
     fun loadScores() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
@@ -65,16 +67,18 @@ class ScoreStorage {
             override fun onDataChange(snapshot: DataSnapshot) {
                 scores = mutableListOf()
                 for (subjectSnapshot in snapshot.children) {
-                    try {
-                        val map = subjectSnapshot.value as Map<String, Any>
-                        val score = map.toScore()
-                        scores.add(score)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error parsing subject: ${e.message}")
+                    for (scoreSnapshot in subjectSnapshot.children) {
+                        try {
+                            val map = scoreSnapshot.value as Map<String, Any>
+                            val score = map.toScore()
+                            scores.add(score)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing score: ${e.message}")
+                        }
                     }
                 }
 
-                Log.e(TAG, "Retrieved subjects: $scores")
+                Log.e(TAG, "Retrieved scores: $scores")
             }
 
             override fun onCancelled(error: DatabaseError) {

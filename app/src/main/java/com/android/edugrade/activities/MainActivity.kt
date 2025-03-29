@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.android.edugrade.R
+import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.fragments.HomeFragment
 import com.android.edugrade.fragments.LogOut
@@ -21,17 +22,17 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private lateinit var user: FirebaseUser
     @Inject
     lateinit var subjectStorage: SubjectStorage
+    @Inject
+    lateinit var scoreStorage: ScoreStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        user = Firebase.auth.currentUser!!
-
         subjectStorage.loadSubjects()
+        scoreStorage.loadScores()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 

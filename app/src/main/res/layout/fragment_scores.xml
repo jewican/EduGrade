@@ -20,8 +20,8 @@
             android:textStyle="bold"
             android:textSize="32sp"/>
 
-        <ListView
-            android:id="@+id/lv_act"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scoresList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

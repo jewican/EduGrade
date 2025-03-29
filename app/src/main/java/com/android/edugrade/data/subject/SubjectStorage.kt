@@ -27,17 +27,16 @@ class SubjectStorage {
     private val TAG = "SubjectStorage"
 
     fun addSubject(subject: Subject) {
-        val user = auth.currentUser
-        if (user == null) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
             Log.wtf(TAG, "User is not authenticated!")
             return
         }
-        Log.wtf(TAG, "Current user's UID: ${user.uid}")
 
         Log.wtf(TAG, "Attempting to save ${subject.code}...")
 
         val subjectRef = database.child("subjects")
-            .child(user.uid)
+            .child(userId)
             .child(subject.code)
 
         subjectRef.setValue(subject.toMap())
@@ -59,7 +58,11 @@ class SubjectStorage {
     }
 
     fun deleteSubject(code: String) {
-        val userId = auth.currentUser!!.uid
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.wtf(TAG, "User is not authenticated!")
+            return
+        }
         val subjectsRef = database.child("subjects")
             .child(userId)
             .child(code)
@@ -85,7 +88,12 @@ class SubjectStorage {
     }
 
     fun loadSubjects() {
-        val userId = auth.currentUser!!.uid
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            return
+        }
+
         val subjectsRef = database.child("subjects").child(userId)
 
         subjectsRef.addValueEventListener(object : ValueEventListener {
@@ -94,7 +102,6 @@ class SubjectStorage {
                 for (subjectSnapshot in snapshot.children) {
                     try {
                         val map = subjectSnapshot.value as Map<String, Any>
-                        Log.wtf(TAG, map.toString())
                         val subject = map.toSubject()
                         subjects.add(subject)
                     } catch (e: Exception) {

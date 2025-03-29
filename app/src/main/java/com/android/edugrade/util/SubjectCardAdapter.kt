@@ -11,8 +11,7 @@ import com.android.edugrade.models.Subject
 class SubjectCardAdapter(
     private val subjects: List<Subject>,
     private val onClick: (String) -> Unit
-) :
-    RecyclerView.Adapter<SubjectCardAdapter.SubjectViewHolder>() {
+) : RecyclerView.Adapter<SubjectCardAdapter.SubjectViewHolder>() {
 
         class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val binding = SubjectsSubjectCardBinding.bind(itemView)
