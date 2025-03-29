@@ -30,26 +30,20 @@
         <Button
             android:id="@+id/addSubjectButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/primary_button_filled"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:text="ADD SUBJECT"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:paddingHorizontal="48dp" />
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/deleteSubjectButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/primary_button_filled"
-            android:backgroundTint="@color/black"
+            android:layout_height="48dp"
             android:text="DELETE SUBJECT"
-            android:textColor="@color/white"
             android:textSize="16sp"
             android:paddingHorizontal="48dp"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
     </LinearLayout>
 

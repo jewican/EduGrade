@@ -14,7 +14,7 @@
         android:icon="@drawable/subjects"/>
     <item
         android:id="@+id/performance"
-        android:title="Performance"
+        android:title="Insights"
         android:icon="@drawable/performance"/>
     <item
         android:id="@+id/profile"

@@ -41,14 +41,14 @@
 
         <Button
             android:id="@+id/addTimeslotButton"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginVertical="8dp"
             android:background="@drawable/primary_button"
             android:text="ADD TIMESLOT"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:paddingHorizontal="48dp" />
 
     </LinearLayout>
