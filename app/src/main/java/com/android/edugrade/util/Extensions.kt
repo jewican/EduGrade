@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.android.edugrade.R
 import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import java.time.DayOfWeek
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 // Firebase adapters
@@ -76,8 +78,40 @@ fun Map<String, Any>.toAssessmentType(): AssessmentType {
     )
 }
 
+fun Score.toMap(): Map<String, Any> {
+    return mapOf(
+        "code" to code,
+        "assessmentType" to assessmentType,
+        "name" to name,
+        "userScore" to userScore,
+        "totalScore" to totalScore,
+        "dateAdded" to dateAdded.toString()
+    )
+}
+
+fun Map<String, Any>.toScore(): Score {
+    val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
+
+    return Score(
+        this["code"] as String,
+        this["assessmentType"] as String,
+        this["name"] as String,
+        this["userScore"] as Double,
+        this["totalScore"] as Double,
+        dateAdded
+    )
+}
+
 fun Activity.showError(message: String) {
     AlertDialog.Builder(this).apply {
+        setMessage(message)
+            .setPositiveButton("Ok") { _, _ -> }
+        create()
+    }.show()
+}
+
+fun Fragment.showError(message: String) {
+    AlertDialog.Builder(context).apply {
         setMessage(message)
             .setPositiveButton("Ok") { _, _ -> }
         create()
