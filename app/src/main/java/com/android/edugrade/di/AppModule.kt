@@ -15,5 +15,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSubjectStorage(@ApplicationContext appContext: Context): SubjectStorage = SubjectStorage(appContext)
+    fun provideSubjectStorage(): SubjectStorage = SubjectStorage()
 }
