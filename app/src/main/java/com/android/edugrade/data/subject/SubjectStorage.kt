@@ -4,37 +4,49 @@ import android.content.Context
 import android.util.Log
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
+import com.android.edugrade.util.toMap
+import com.android.edugrade.util.toSubject
 import com.fatboyindustrial.gsonjavatime.Converters
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
 
-class SubjectStorage(private val context: Context) {
-    private lateinit var subjects: MutableList<Subject>
-    private val gson = Converters.registerLocalTime(GsonBuilder()).create()
-    private val filename = "subjects.json"
+class SubjectStorage {
+    private var subjects: MutableList<Subject> = mutableListOf()
+    private val database = Firebase.database.reference
+    private val auth = Firebase.auth
 
-    init {
-        loadSubjects()
-    }
+    private val TAG = "SubjectStorage"
 
     fun addSubject(subject: Subject) {
-        val existingIndex = subjects.indexOfFirst { it.code == subject.code }
-
-        if (existingIndex != -1) {
-            Log.e("SubjectStorage", "Subject already exists! Overwriting details.")
-            subjects[existingIndex] = subjects[existingIndex].copy(
-                description = subject.description,
-                instructor = subject.instructor,
-                timeslots = subject.timeslots,
-                assessmentTypes = subject.assessmentTypes
-            )
-        } else {
-            Log.e("SubjectStorage", "Subject not found. Adding new subject.")
-            subjects.add(subject)
+        val user = auth.currentUser
+        if (user == null) {
+            Log.wtf(TAG, "User is not authenticated!")
+            return
         }
+        Log.wtf(TAG, "Current user's UID: ${user.uid}")
 
-        saveSubjects()
+        Log.wtf(TAG, "Attempting to save ${subject.code}...")
+
+        val subjectRef = database.child("subjects")
+            .child(user.uid)
+            .child(subject.code)
+
+        subjectRef.setValue(subject.toMap())
+            .addOnSuccessListener {
+                Log.e(TAG, "Subject saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Subject saving error! ${e.message}")
+            }
     }
 
     fun getSubject(code: String): Subject {
@@ -47,66 +59,47 @@ class SubjectStorage(private val context: Context) {
     }
 
     fun deleteSubject(code: String) {
-        val index = subjects.indexOfFirst { it.code == code }
-        if (index == -1) {
-            Log.e("SubjectStorage", "Subject to delete [${code}] not found!")
-            return
-        }
-        Log.e("SubjectStorage", "[${code}] was deleted.")
-        subjects.removeAt(index)
-        saveSubjects()
+        val userId = auth.currentUser!!.uid
+        val subjectsRef = database.child("subjects")
+            .child(userId)
+            .child(code)
+
+        subjectsRef.removeValue()
+            .addOnSuccessListener {
+                Log.e(TAG, "Subject saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Subject deletion error! ${e.message}")
+            }
     }
 
     fun getSubjects() = subjects
 
     fun loadSubjects() {
-        try {
-            val jsonString = context.openFileInput(filename).bufferedReader().use {
-                it.readText()
+        val userId = auth.currentUser!!.uid
+        val subjectsRef = database.child("subjects").child(userId)
+
+        subjectsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                subjects = mutableListOf()
+                for (subjectSnapshot in snapshot.children) {
+                    try {
+                        val map = subjectSnapshot.value as Map<String, Any>
+                        Log.wtf(TAG, map.toString())
+                        val subject = map.toSubject()
+                        subjects.add(subject)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error parsing subject: ${e.message}")
+                    }
+                }
+
+                Log.e(TAG, "Retrieved subjects: $subjects")
             }
-            val type = object : TypeToken<List<Subject>>() {}.type
-            subjects = gson.fromJson(jsonString, type)
-        } catch (e: FileNotFoundException) {
-            // hardcoded subjects for testing
-            saveHardcodedSubjects(
-                listOf(
-                    Subject(
-                        "CSIT284",
-                        "Platform-based Development (Mobile)",
-                        "Joemarie Amparo",
-                        1,
-                        listOf(
-                            AssessmentType(
-                                "Lab",
-                                0.0,
-                                0.5
-                            ),
-                            AssessmentType(
-                                "Lecture",
-                                0.0,
-                                0.5
-                            )
-                        ),
-                        listOf(),
-                        4.0
-                    )
-                )
-            )
-            loadSubjects()
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Database error: ${error.message}")
+            }
+        })
     }
 
-    private fun saveSubjects() {
-        val jsonString = gson.toJson(subjects)
-        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-            it.write(jsonString.toByteArray())
-        }
-    }
-
-    private fun saveHardcodedSubjects(subjects: List<Subject>) {
-        val jsonString = gson.toJson(subjects)
-        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-            it.write(jsonString.toByteArray())
-        }
-    }
 }
