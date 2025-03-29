@@ -1,6 +1,7 @@
 package com.android.edugrade.di
 
 import android.content.Context
+import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import dagger.Module
 import dagger.Provides
@@ -16,4 +17,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSubjectStorage(): SubjectStorage = SubjectStorage()
+
+    @Provides
+    @Singleton
+    fun provideScoreStorage(): ScoreStorage = ScoreStorage()
 }
