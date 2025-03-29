@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.android.edugrade.R
+import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.fragments.HomeFragment
 import com.android.edugrade.fragments.LogOut
 import com.android.edugrade.fragments.PerformanceFragment
@@ -16,16 +17,21 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var user: FirebaseUser
+    @Inject
+    lateinit var subjectStorage: SubjectStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         user = Firebase.auth.currentUser!!
+
+        subjectStorage.loadSubjects()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 

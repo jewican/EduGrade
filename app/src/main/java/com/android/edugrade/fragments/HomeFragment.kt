@@ -30,10 +30,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        subjectStorage = SubjectStorage(requireContext())
-
-        subjectStorage.loadSubjects()
-
         binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = SubjectBreakdownAdapter(subjectStorage.getSubjects())
