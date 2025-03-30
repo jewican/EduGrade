@@ -16,6 +16,7 @@ import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.data.subject.SubjectStorage
+import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -150,10 +151,16 @@ class AddSubjectFragment(
                     .map { it.toInt() }
                 val (endHour, endMinute) = child.timeslotTimeOut.text.split(":").map { it.toInt() }
 
+                val selectedDay = child.dayOfWeekChipGroup.checkedChipId
+                if (selectedDay == View.NO_ID) {
+                    throw IllegalArgumentException("Please select a day of the week for all timeslots!")
+                }
+                val dayOfWeek = child.root.findViewById<Chip>(selectedDay).tag as String
+
                 timeslots.add(
                     Timeslot(
                         type = child.timeslotType.text.toString(),
-                        dayOfWeek = DayOfWeek.MONDAY, // TODO: add day of week selector in layout
+                        dayOfWeek = DayOfWeek.valueOf(dayOfWeek),
                         startTime = LocalTime.of(startHour, startMinute),
                         endTime = LocalTime.of(endHour, endMinute)
                     )
@@ -214,9 +221,26 @@ class AddSubjectFragment(
             timeslotView = binding.timeslotsCard.subjectTimeslots.getChildAt(i)
             timeslotBinding = AddSubjectTimeslotItemBinding.bind(timeslotView)
 
-            timeslotBinding.timeslotType.setText(subject.timeslots[i].type)
-            timeslotBinding.timeslotTimeIn.setText(subject.timeslots[i].startTime.toString())
-            timeslotBinding.timeslotTimeOut.setText(subject.timeslots[i].endTime.toString())
+            timeslotBinding.timeslotType
+                .setText(subject.timeslots[i].type)
+            timeslotBinding.timeslotTimeIn
+                .setText(subject.timeslots[i].startTime.toString())
+            timeslotBinding.timeslotTimeOut
+                .setText(subject.timeslots[i].endTime.toString())
+
+            (timeslotBinding.dayOfWeekChipGroup.getChildAt(subject.timeslots[i].dayOfWeek.value - 1) as Chip)
+                .let { chip ->
+                    chip.isChecked = true
+                    timeslotBinding.dayOfWeekScrollView.let {
+                        it.post {
+                            val chipCenterX = chip.left + chip.width / 2
+                            val scrollCenterX = it.width / 2
+                            val scrollX = chipCenterX - scrollCenterX
+                            it.smoothScrollTo(scrollX, 0)
+                        }
+                    }
+                }
+
         }
 
         var activityTypeView: View

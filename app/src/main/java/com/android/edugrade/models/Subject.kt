@@ -9,5 +9,3 @@ data class Subject(
     val timeslots: List<Timeslot> = listOf(),
     val overallGrade: Double = 0.0
 )
-
-
