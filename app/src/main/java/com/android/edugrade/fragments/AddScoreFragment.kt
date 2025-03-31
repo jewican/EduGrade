@@ -42,7 +42,9 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
         binding.subjectTextView.setAdapter(ArrayAdapter(requireContext(), R.layout.subject_list_item, subjectsList))
 
         binding.subjectTextView.setOnItemClickListener { _, _, position, _ ->
-            val assessmentTypesList = subjectStorage.getAssessmentTypes(subjectsList[position]).map { it.name }
+            val subject = subjectStorage.getSubject(subjectsList[position])
+            val assessmentTypes = subject.getLeafNodes()
+            val assessmentTypesList = assessmentTypes.map { it.name }
             binding.assessmentTypeTextView.setAdapter(ArrayAdapter(requireContext(), R.layout.subject_list_item, assessmentTypesList))
         }
         
