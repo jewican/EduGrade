@@ -21,11 +21,11 @@
             android:id="@+id/generalCard"
             layout="@layout/add_subject_general_card"/>
 
-        <include android:id="@+id/timeslotsCard"
-            layout="@layout/add_subject_timeslots_card"/>
-
         <include android:id="@+id/activityTypesCard"
             layout="@layout/add_subject_activity_types_card"/>
+
+        <include android:id="@+id/timeslotsCard"
+            layout="@layout/add_subject_timeslots_card"/>
 
         <Button
             android:id="@+id/addSubjectButton"

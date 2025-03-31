@@ -1,56 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
-    app:layout_constraintTop_toBottomOf="@id/addSubjectTitle"
-    app:layout_constraintStart_toStartOf="parent"
-    app:cardCornerRadius="8dp"
-    app:contentPadding="12dp"
-    app:cardUseCompatPadding="true">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="12dp"
+        app:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/activityTypesTitle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="ACTIVITY TYPES"
-            android:textAlignment="center"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/subjectActivityTypes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintTop_toBottomOf="@id/activityTypesTitle"
-            android:orientation="vertical">
+            <TextView
+                android:id="@+id/activityTypesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GRADING SYSTEM"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-<!--            <include layout="@layout/add_subject_activity_types_item"/>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/subjectSemesterParts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/activityTypesTitle"
+                tools:layout_editor_absoluteX="0dp"/>
 
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/addTypeButton"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            app:layout_constraintTop_toBottomOf="@id/subjectActivityTypes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/primary_button"
-            android:text="ADD TYPE"
-            android:textSize="14sp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.cardview.widget.CardView>
+            <Button
+                android:id="@+id/addSemesterPartButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADD SEMESTER PART"
+                app:layout_constraintTop_toBottomOf="@id/subjectSemesterParts"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginVertical="8dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.core.widget.NestedScrollView>
