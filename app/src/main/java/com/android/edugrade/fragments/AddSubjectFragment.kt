@@ -18,6 +18,7 @@ import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.util.GradingSystemAdapter
+import com.android.edugrade.util.showError
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
@@ -31,6 +32,7 @@ class AddSubjectFragment(
     val code: String? = null
 ) : Fragment() {
     private lateinit var binding: FragmentAddSubjectBinding
+    private val assessmentTypeNodesList: MutableList<AssessmentType> = mutableListOf()
     private lateinit var semesterPartAdapter: GradingSystemAdapter
     @Inject
     lateinit var subjectStorage: SubjectStorage
@@ -59,7 +61,7 @@ class AddSubjectFragment(
         }
 
         semesterPartAdapter = GradingSystemAdapter(
-            mutableListOf(),
+            assessmentTypeNodesList,
             onAddChild = { parent -> addAssessmentType(parent) }
         )
 
@@ -124,17 +126,15 @@ class AddSubjectFragment(
         val instructor = binding.generalCard.subjectInstructor.text.toString()
 
         var timeslots: List<Timeslot>
-        var assessmentTypes: List<AssessmentType>
         try {
             timeslots = getTimeslots()
-            assessmentTypes = getAssessmentTypes()
         } catch (e: Exception) {
-            showAlert(e.message!!)
+            showError(e.message!!)
             return false
         }
 
         Log.wtf("AddSubjectFragment: Timeslots", timeslots.toString())
-        Log.wtf("AddSubjectFragment: AssessmentTypes", assessmentTypes.toString())
+        Log.wtf("AddSubjectFragment: AssessmentTypes", assessmentTypeNodesList.toString())
 
         subjectStorage.addSubject(
             Subject(
@@ -142,7 +142,7 @@ class AddSubjectFragment(
                 description = description,
                 instructor = instructor,
                 timeslots = timeslots,
-                assessmentTypes = assessmentTypes,
+                assessmentTypes = assessmentTypeNodesList,
                 overallGrade = 5.0
             )
         )
@@ -285,15 +285,6 @@ class AddSubjectFragment(
             create()
         }
         prompt.show()
-    }
-
-    private fun showAlert(message: String) {
-        AlertDialog.Builder(requireContext()).apply {
-            setMessage(message)
-                .setPositiveButton("Ok") { _, _ ->
-                }
-            create()
-        }.show()
     }
 
 }

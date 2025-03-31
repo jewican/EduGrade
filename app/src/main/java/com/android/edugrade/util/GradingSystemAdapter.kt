@@ -1,5 +1,6 @@
 package com.android.edugrade.util
 
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,22 +29,26 @@ class GradingSystemAdapter(
         val binding = AddSubjectActivityTypesItemBinding.bind(view)
 
         fun bind(assessmentTypeNode: AssessmentType) {
-            binding.activityType.setText(assessmentTypeNode.name)
-            binding.activityWeight.setText(assessmentTypeNode.weight.toString())
-
             val childAdapter = GradingSystemAdapter(
                 assessmentTypeNode.assessmentTypes,
                 onAddChild,
             )
 
-            binding.activityType.doAfterTextChanged { text ->
-                assessmentTypeNode.name = text.toString()
-            }
-            binding.activityWeight.doAfterTextChanged { text ->
-                assessmentTypeNode.weight = text.toString().toDouble()
+            binding.activityType.apply {
+                removeTextChangedListener(this.tag as? TextWatcher)
+                val typeTextWatcher = doAfterTextChanged { text ->
+                    assessmentTypeNode.name = text.toString()
+                }
+                tag = typeTextWatcher
             }
 
-            binding.assessmentTypesList.isNestedScrollingEnabled = false
+            binding.activityWeight.apply {
+                removeTextChangedListener(this.tag as? TextWatcher)
+                val weightTextWatcher = doAfterTextChanged { text ->
+                    assessmentTypeNode.weight = text.toString().toDouble()
+                }
+                tag = weightTextWatcher
+            }
 
             binding.assessmentTypesList.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
@@ -60,6 +65,9 @@ class GradingSystemAdapter(
                 binding.assessmentTypesList.invalidate()
                 binding.assessmentTypesList.requestLayout()
             }
+
+            binding.activityType.setText(assessmentTypeNode.name)
+            binding.activityWeight.setText(assessmentTypeNode.weight.toString())
         }
     }
 
@@ -95,6 +103,9 @@ class GradingSystemAdapter(
 
     fun addRootNode(node: AssessmentType) {
         val res = assessmentTypeNodes.add(node)
+        for (node in assessmentTypeNodes) {
+            Log.wtf(TAG, "${node.name}: ${System.identityHashCode(node)} ")
+        }
         Log.wtf(TAG, "Added Root: $res | Current children: ${assessmentTypeNodes.size}")
         notifyDataSetChanged()
     }

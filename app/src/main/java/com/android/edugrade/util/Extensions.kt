@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.android.edugrade.R
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Score
