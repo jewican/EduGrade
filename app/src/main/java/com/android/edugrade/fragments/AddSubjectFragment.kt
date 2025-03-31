@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.databinding.AddSubjectActivityTypesItemBinding
 import com.android.edugrade.databinding.AddSubjectTimeslotItemBinding
 import com.android.edugrade.databinding.FragmentAddSubjectBinding
@@ -16,6 +17,7 @@ import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.data.subject.SubjectStorage
+import com.android.edugrade.util.GradingSystemAdapter
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
@@ -29,6 +31,7 @@ class AddSubjectFragment(
     val code: String? = null
 ) : Fragment() {
     private lateinit var binding: FragmentAddSubjectBinding
+    private lateinit var semesterPartAdapter: GradingSystemAdapter
     @Inject
     lateinit var subjectStorage: SubjectStorage
 
@@ -47,12 +50,22 @@ class AddSubjectFragment(
             addTimeslot()
         }
 
-        binding.activityTypesCard.addTypeButton.setOnClickListener {
-            addActivityType()
+        binding.activityTypesCard.addSemesterPartButton.setOnClickListener {
+            addAssessmentType(null)
         }
 
         binding.addSubjectButton.setOnClickListener {
             if (saveSubject()) parentFragmentManager.popBackStack()
+        }
+
+        semesterPartAdapter = GradingSystemAdapter(
+            mutableListOf(),
+            onAddChild = { parent -> addAssessmentType(parent) }
+        )
+
+        binding.activityTypesCard.subjectSemesterParts.apply {
+            adapter = semesterPartAdapter
+            layoutManager = LinearLayoutManager(context)
         }
 
         if (code != null) {
@@ -61,7 +74,22 @@ class AddSubjectFragment(
         }
 
         addTimeslot()
-        addActivityType()
+        addAssessmentType(null)
+    }
+
+    private fun addAssessmentType(parent: AssessmentType?) {
+        val newAssessmentNode = AssessmentType()
+
+        if (parent == null) {
+            semesterPartAdapter.addRootNode(newAssessmentNode)
+        } else {
+            semesterPartAdapter.addChild(parent, newAssessmentNode)
+        }
+
+        binding.activityTypesCard.subjectSemesterParts.post {
+            binding.activityTypesCard.subjectSemesterParts.invalidate()
+            binding.activityTypesCard.subjectSemesterParts.requestLayout()
+        }
     }
 
     private fun addTimeslot() {
@@ -85,24 +113,6 @@ class AddSubjectFragment(
 
         deleteTimeslotButton.setOnClickListener {
             linearLayout.removeView(deleteTimeslotButton.parent as ViewGroup)
-        }
-
-        linearLayout.addView(binding.root)
-    }
-
-    private fun addActivityType() {
-        val linearLayout = binding.activityTypesCard.subjectActivityTypes
-        val binding = AddSubjectActivityTypesItemBinding.inflate(
-            layoutInflater,
-            linearLayout,
-            false
-        )
-
-        val deleteWeightButton = binding.deleteWeightButton
-        deleteWeightButton.visibility = View.VISIBLE
-
-        deleteWeightButton.setOnClickListener {
-            linearLayout.removeView(deleteWeightButton.parent as ViewGroup)
         }
 
         linearLayout.addView(binding.root)
@@ -174,7 +184,7 @@ class AddSubjectFragment(
 
     private fun getAssessmentTypes(): MutableList<AssessmentType> {
         val assessmentTypes: MutableList<AssessmentType> = mutableListOf()
-        val linearLayout = binding.activityTypesCard.subjectActivityTypes
+        val linearLayout = binding.activityTypesCard.subjectSemesterParts
         var child: AddSubjectActivityTypesItemBinding
         try {
             for (i in 0 until linearLayout.childCount) {
@@ -246,9 +256,9 @@ class AddSubjectFragment(
         var activityTypeView: View
         var activityTypeBinding: AddSubjectActivityTypesItemBinding
         for (i in 0 until subject.assessmentTypes.size) {
-            addActivityType()
+            addAssessmentType(null)
 
-            activityTypeView = binding.activityTypesCard.subjectActivityTypes.getChildAt(i)
+            activityTypeView = binding.activityTypesCard.subjectSemesterParts.getChildAt(i)
             activityTypeBinding = AddSubjectActivityTypesItemBinding.bind(activityTypeView)
 
             activityTypeBinding.activityType.setText(subject.assessmentTypes[i].name)
