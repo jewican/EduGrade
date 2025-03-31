@@ -8,4 +8,16 @@ data class Subject(
     val assessmentTypes: List<AssessmentType> = listOf(),
     val timeslots: List<Timeslot> = listOf(),
     val overallGrade: Double = 0.0
-)
+) {
+    fun getLeafNodes(assessments: List<AssessmentType> = assessmentTypes): List<AssessmentType> {
+        val leafNodes = mutableListOf<AssessmentType>()
+        for (assessment in assessments) {
+            if (assessment.assessmentTypes.isEmpty()) {
+                leafNodes.add(assessment)
+            } else {
+                leafNodes.addAll(getLeafNodes(assessment.assessmentTypes))
+            }
+        }
+        return leafNodes
+    }
+}
