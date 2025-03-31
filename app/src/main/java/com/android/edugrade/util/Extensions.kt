@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.android.edugrade.R
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Score
@@ -66,7 +67,8 @@ fun AssessmentType.toMap(): Map<String, Any> {
     return mapOf(
         "name" to name,
         "grade" to grade,
-        "weight" to weight
+        "weight" to weight,
+        "assessmentTypes" to assessmentTypes
     )
 }
 
@@ -74,7 +76,8 @@ fun Map<String, Any>.toAssessmentType(): AssessmentType {
     return AssessmentType(
         name = this["name"] as String,
         grade = (this["grade"] as Number).toDouble(),
-        weight = (this["weight"] as Number).toDouble()
+        weight = (this["weight"] as Number).toDouble(),
+        assessmentTypes = this["assessmentTypes"] as MutableList<AssessmentType>
     )
 }
 
