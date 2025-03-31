@@ -67,7 +67,7 @@ fun AssessmentType.toMap(): Map<String, Any> {
         "name" to name,
         "grade" to grade,
         "weight" to weight,
-        "assessmentTypes" to assessmentTypes
+        "assessmentTypes" to assessmentTypes.map { it.toMap() }
     )
 }
 
@@ -76,7 +76,9 @@ fun Map<String, Any>.toAssessmentType(): AssessmentType {
         name = this["name"] as String,
         grade = (this["grade"] as Number).toDouble(),
         weight = (this["weight"] as Number).toDouble(),
-        assessmentTypes = this["assessmentTypes"] as MutableList<AssessmentType>
+        assessmentTypes = ((this["assessmentTypes"] as? List<Map<String, Any>>)
+            ?.map { it.toAssessmentType() })?.toMutableList()
+            ?: mutableListOf()
     )
 }
 
