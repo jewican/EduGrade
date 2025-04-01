@@ -7,7 +7,7 @@ data class Subject(
     val units: Int = 0,
     val assessmentTypes: List<AssessmentType> = listOf(),
     val timeslots: List<Timeslot> = listOf(),
-    val overallGrade: Double = 0.0
+    var overallGrade: Double = 0.0
 ) {
     fun getLeafNodes(assessments: List<AssessmentType> = assessmentTypes): List<AssessmentType> {
         val leafNodes = mutableListOf<AssessmentType>()
@@ -19,5 +19,10 @@ data class Subject(
             }
         }
         return leafNodes
+    }
+
+    fun calculateOverallGrade(activityMap: Map<String, List<Score>>): Double {
+        overallGrade = assessmentTypes.sumOf { it.calculateGrade(activityMap) * it.weight }
+        return overallGrade
     }
 }
