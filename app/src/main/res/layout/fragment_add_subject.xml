@@ -36,6 +36,16 @@
             android:textSize="16sp"/>
 
         <Button
+            android:id="@+id/recalculateGradeButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="RECALCULATE GRADE"
+            android:textSize="16sp"
+            android:paddingHorizontal="48dp"
+            android:visibility="gone"/>
+
+        <Button
             android:id="@+id/deleteSubjectButton"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"

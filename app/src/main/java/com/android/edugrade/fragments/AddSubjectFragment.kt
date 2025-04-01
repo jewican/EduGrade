@@ -252,6 +252,13 @@ class AddSubjectFragment(
                     }
                 }
 
+            binding.recalculateGradeButton.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    subjectStorage.recalculateSubject(code)
+                    showError("Subject recalculated")
+                }
+            }
         }
 
         binding.addSubjectButton.text = "SAVE CHANGES"
