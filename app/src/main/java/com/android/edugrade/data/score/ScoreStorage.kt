@@ -2,18 +2,14 @@ package com.android.edugrade.data.score
 
 import android.util.Log
 import com.android.edugrade.models.Score
-import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toScore
-import com.android.edugrade.util.toSubject
-import com.fatboyindustrial.gsonjavatime.Converters
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.gson.GsonBuilder
 
 class ScoreStorage {
     private var scores: MutableList<Score> = mutableListOf()
@@ -36,7 +32,6 @@ class ScoreStorage {
 
         val scoreRef = database.child("scores")
             .child(userId)
-            .child(score.code)
             .push()
 
         scoreRef.setValue(score.toMap())
@@ -50,8 +45,37 @@ class ScoreStorage {
             }
     }
 
-    fun getScores(): List<Score> = scores
+    fun getAllScores(): List<Score> = scores
 
+    fun getScores(code: String, onResult: (List<Score>) -> Unit) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            return
+        }
+
+        val scoresQuery = database
+            .child("scores")
+            .child(userId)
+            .orderByChild("code")
+            .equalTo(code)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val scores = mutableListOf<Score>()
+                    for (scoreSnapshot in snapshot.children) {
+                        val scoreMap = scoreSnapshot.value as Map<String, Any>
+                        val score = scoreMap.toScore()
+                        scores.add(score)
+                    }
+                    onResult(scores)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    println("Error: ${error.message}")
+                }
+            })
+    }
+
+    // TODO: limit queries to recent scores only
     fun loadScores() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
@@ -66,17 +90,16 @@ class ScoreStorage {
         scoresRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 scores = mutableListOf()
-                for (subjectSnapshot in snapshot.children) {
-                    for (scoreSnapshot in subjectSnapshot.children) {
-                        try {
-                            val map = scoreSnapshot.value as Map<String, Any>
-                            val score = map.toScore()
-                            scores.add(score)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error parsing score: ${e.message}")
-                        }
+                for (scoreSnapshot in snapshot.children) {
+                    try {
+                        val map = scoreSnapshot.value as Map<String, Any>
+                        val score = map.toScore()
+                        scores.add(score)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error parsing score: ${e.message}")
                     }
                 }
+
 
                 Log.e(TAG, "Retrieved scores: $scores")
             }

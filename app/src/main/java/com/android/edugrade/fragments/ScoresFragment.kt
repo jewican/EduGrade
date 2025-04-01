@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.databinding.FragmentScoresBinding
-import com.android.edugrade.models.Score
 import com.android.edugrade.util.ScoreCardAdapter
 import com.android.edugrade.util.setCurrentFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +32,7 @@ class ScoresFragment : Fragment(R.layout.fragment_scores) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val scores = scoreStorage.getScores()
+        val scores = scoreStorage.getAllScores()
 
         binding.addScoreButton.setOnClickListener {
             setCurrentFragment(AddScoreFragment())
