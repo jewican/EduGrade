@@ -99,12 +99,12 @@ fun Map<String, Any>.toScore(): Score {
     val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
 
     return Score(
-        this["code"] as String,
-        this["assessmentType"] as String,
-        this["name"] as String,
-        userScore,
-        totalScore,
-        dateAdded
+        code = this["code"] as String,
+        assessmentType = this["assessmentType"] as String,
+        name = this["name"] as String,
+        userScore = userScore,
+        totalScore = totalScore,
+        dateAdded = dateAdded
     )
 }
 
