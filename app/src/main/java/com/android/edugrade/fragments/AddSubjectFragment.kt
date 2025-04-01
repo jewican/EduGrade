@@ -216,6 +216,7 @@ class AddSubjectFragment(
 
     private fun editSubjectMode() {
         val subject = subjectStorage.getSubject(code!!)
+        assessmentTypeNodesList.addAll(subject.assessmentTypes)
 
         binding.generalCard.subjectCode.setText(subject.code)
         binding.generalCard.subjectCode.focusable = View.NOT_FOCUSABLE
@@ -251,18 +252,6 @@ class AddSubjectFragment(
                     }
                 }
 
-        }
-
-        var activityTypeView: View
-        var activityTypeBinding: AddSubjectActivityTypesItemBinding
-        for (i in 0 until subject.assessmentTypes.size) {
-            addAssessmentType(null)
-
-            activityTypeView = binding.activityTypesCard.subjectSemesterParts.getChildAt(i)
-            activityTypeBinding = AddSubjectActivityTypesItemBinding.bind(activityTypeView)
-
-            activityTypeBinding.activityType.setText(subject.assessmentTypes[i].name)
-            activityTypeBinding.activityWeight.setText(subject.assessmentTypes[i].weight.toString())
         }
 
         binding.addSubjectButton.text = "SAVE CHANGES"
