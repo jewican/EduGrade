@@ -71,6 +71,7 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
                 dateAdded = dateAdded,
             ),
             onSuccess = {
+                subjectStorage.recalculateSubject(code)
                 parentFragmentManager.popBackStack()
             },
             onFailure = { exception ->

@@ -16,7 +16,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSubjectStorage(): SubjectStorage = SubjectStorage()
+    fun provideSubjectStorage(): SubjectStorage = SubjectStorage(provideScoreStorage())
 
     @Provides
     @Singleton

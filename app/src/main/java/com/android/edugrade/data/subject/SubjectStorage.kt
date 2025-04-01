@@ -2,7 +2,9 @@ package com.android.edugrade.data.subject
 
 import android.content.Context
 import android.util.Log
+import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toSubject
@@ -18,8 +20,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
+import javax.inject.Inject
 
-class SubjectStorage {
+class SubjectStorage(private val scoreStorage: ScoreStorage) {
     private var subjects: MutableList<Subject> = mutableListOf()
     private val database = Firebase.database.reference
     private val auth = Firebase.auth
@@ -77,6 +80,16 @@ class SubjectStorage {
     }
 
     fun getSubjects(): List<Subject> = subjects
+
+    fun recalculateSubject(code: String) {
+        val subject = getSubject(code)
+        scoreStorage.getScores(code) { scoreList ->
+            val activitiesMap = scoreList.groupBy { it.assessmentType }
+            Log.w("SubjectStorage", "$activitiesMap")
+            subject.calculateOverallGrade(activitiesMap)
+            addSubject(subject)
+        }
+    }
 
     fun getAssessmentTypes(code: String): List<AssessmentType> {
         val index = subjects.indexOfFirst { it.code == code }
