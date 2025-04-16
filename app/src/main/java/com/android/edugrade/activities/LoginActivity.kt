@@ -2,9 +2,7 @@ package com.android.edugrade.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.android.edugrade.R
 import com.android.edugrade.databinding.ActivityLoginBinding
 import com.android.edugrade.util.showError
 import com.google.firebase.Firebase
@@ -23,6 +21,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
+
+        binding.registerButton.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
 
         binding.loginButton.setOnClickListener {
             loginUser()

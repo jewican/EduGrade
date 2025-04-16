@@ -91,50 +91,29 @@
         android:layout_marginVertical="16dp"
         android:background="?attr/colorOnSurface"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="OR LOG IN USING"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="16dp"
-        android:paddingHorizontal="32dp">
+        android:layout_marginVertical="16dp"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-        <ImageButton
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:src="@drawable/social" />
-        <ImageButton
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:src="@drawable/facebook"/>
-        <ImageButton
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:src="@drawable/twitter"/>
-        <ImageButton
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:src="@drawable/instagram"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account yet? "
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface"/>
+
+        <TextView
+            android:id="@+id/registerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Register"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"/>
+
     </LinearLayout>
 
 </LinearLayout>
