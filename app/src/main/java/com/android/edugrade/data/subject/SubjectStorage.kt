@@ -108,9 +108,11 @@ class SubjectStorage(private val scoreStorage: ScoreStorage) {
         }
 
         val subjectsRef = database.child("subjects").child(userId)
+        Log.e(TAG, "Retrieving subjects...")
 
         subjectsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.e(TAG, "Subject data received! Building subjects")
                 subjects = mutableListOf()
                 for (subjectSnapshot in snapshot.children) {
                     try {
@@ -121,7 +123,6 @@ class SubjectStorage(private val scoreStorage: ScoreStorage) {
                         Log.e(TAG, "Error parsing subject: ${e.message}")
                     }
                 }
-
                 Log.e(TAG, "Retrieved subjects: $subjects")
             }
 

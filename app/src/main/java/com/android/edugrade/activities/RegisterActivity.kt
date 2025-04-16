@@ -52,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            if (auth.registerUser(email, password1)) {
+            if (auth.registerUser(username, email, password1)) {
                 showError("Registration successful!") {
                     finish()
                 }

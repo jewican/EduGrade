@@ -2,6 +2,8 @@ package com.android.edugrade.util
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.android.edugrade.R
@@ -108,10 +110,11 @@ fun Map<String, Any>.toScore(): Score {
     )
 }
 
-fun Activity.showError(message: String) {
+fun Activity.showError(message: String, onDismiss: (() -> Unit)? = null) {
     AlertDialog.Builder(this).apply {
         setMessage(message)
             .setPositiveButton("Ok") { _, _ -> }
+            .setOnDismissListener { onDismiss?.invoke() }
         create()
     }.show()
 }
@@ -149,4 +152,8 @@ fun Fragment.setCurrentFragment(fragment: Fragment) {
         addToBackStack("")
         commit()
     }
+}
+
+fun String.isValidEmail(): Boolean {
+    return Patterns.EMAIL_ADDRESS.matcher(this).matches()
 }
