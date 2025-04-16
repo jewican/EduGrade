@@ -1,6 +1,7 @@
 package com.android.edugrade.di
 
 import android.content.Context
+import com.android.edugrade.data.auth.AuthRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import dagger.Module
@@ -21,4 +22,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideScoreStorage(): ScoreStorage = ScoreStorage()
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(): AuthRepository = AuthRepository()
 }
