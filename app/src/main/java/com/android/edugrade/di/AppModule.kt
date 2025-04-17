@@ -1,13 +1,11 @@
 package com.android.edugrade.di
 
-import android.content.Context
-import com.android.edugrade.data.auth.AuthRepository
+import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -25,5 +23,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = AuthRepository()
+    fun provideUserRepository(): UserRepository = UserRepository()
 }

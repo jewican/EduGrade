@@ -3,7 +3,7 @@ package com.android.edugrade.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.android.edugrade.data.auth.AuthRepository
+import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.databinding.ActivityRegisterBinding
 import com.android.edugrade.util.isValidEmail
 import com.android.edugrade.util.showError
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     @Inject
-    lateinit var auth: AuthRepository
+    lateinit var auth: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

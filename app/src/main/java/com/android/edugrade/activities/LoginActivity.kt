@@ -1,26 +1,32 @@
 package com.android.edugrade.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.databinding.ActivityLoginBinding
 import com.android.edugrade.util.showError
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
+    private lateinit var context: Context
+    @Inject
+    lateinit var auth: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        context = this
         setContentView(binding.root)
-
-        auth = Firebase.auth
 
         binding.registerButton.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -40,12 +46,14 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                startActivity(Intent(this, MainActivity::class.java))
-            }
-            .addOnFailureListener {
-                showError("Wrong email or password!")
-            }
+        lifecycleScope.launch {
+            auth.loginUser(email, password,
+                onSuccess = {
+                    startActivity(Intent(context, MainActivity::class.java))
+                },
+                onFailure = {
+                    showError("Error logging in: ${it.message}")
+                })
+        }
     }
 }

@@ -130,10 +130,10 @@ fun Fragment.showError(message: String) {
 fun FragmentActivity.setCurrentFragment(fragment: Fragment) {
     supportFragmentManager.beginTransaction().apply {
         setCustomAnimations(
-            R.anim.slide_in,
+            R.anim.fade_in,
             R.anim.fade_out,
             R.anim.fade_in,
-            R.anim.slide_out
+            R.anim.fade_out
         )
         replace(R.id.screenFragment, fragment)
         commit()
