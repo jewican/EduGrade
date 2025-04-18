@@ -125,8 +125,10 @@ class AddSubjectFragment(
         val description = binding.generalCard.subjectDescription.text.toString()
         val instructor = binding.generalCard.subjectInstructor.text.toString()
 
-        var timeslots: List<Timeslot>
+        val timeslots: List<Timeslot>
+        val units: Int
         try {
+            units = getUnits()
             timeslots = getTimeslots()
         } catch (e: Exception) {
             showError(e.message!!)
@@ -141,12 +143,23 @@ class AddSubjectFragment(
                 code = code,
                 description = description,
                 instructor = instructor,
+                units = units,
                 timeslots = timeslots,
                 assessmentTypes = assessmentTypeNodesList,
                 overallGrade = 5.0
             )
         )
         return true
+    }
+
+    private fun getUnits(): Int {
+        val child = binding.generalCard
+
+        val selectedUnits = child.unitsChipGroup.checkedChipId
+        if (selectedUnits == View.NO_ID) {
+            throw IllegalArgumentException("Please select a day of the week for all timeslots!")
+        }
+        return (child.root.findViewById<Chip>(selectedUnits).tag as String).toInt()
     }
 
     private fun getTimeslots(): MutableList<Timeslot> {
@@ -223,6 +236,7 @@ class AddSubjectFragment(
 
         binding.generalCard.subjectDescription.setText(subject.description)
         binding.generalCard.subjectInstructor.setText(subject.instructor)
+        (binding.generalCard.unitsChipGroup.getChildAt(subject.units - 1) as Chip).isChecked = true
 
         var timeslotView: View
         var timeslotBinding: AddSubjectTimeslotItemBinding

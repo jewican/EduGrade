@@ -63,6 +63,96 @@
             android:inputType="text"
             android:textSize="14sp"/>
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Units"/>
+        <HorizontalScrollView
+            android:id="@+id/unitsScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/timeslotTimeIn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            >
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/unitsChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="1"
+                    android:tag="1"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="2"
+                    android:tag="2"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="3"
+                    android:tag="3"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="4"
+                    android:tag="4"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="5"
+                    android:tag="5"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="6"
+                    android:tag="6"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="7"
+                    android:tag="7"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unit_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="8"
+                    android:tag="8"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
