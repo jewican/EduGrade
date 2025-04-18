@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.databinding.AddSubjectActivityTypesItemBinding
 import com.android.edugrade.databinding.AddSubjectTimeslotItemBinding
 import com.android.edugrade.databinding.FragmentAddSubjectBinding
@@ -36,6 +37,8 @@ class AddSubjectFragment(
     private lateinit var semesterPartAdapter: GradingSystemAdapter
     @Inject
     lateinit var subjectStorage: SubjectStorage
+    @Inject
+    lateinit var userRepository: UserRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,6 +153,7 @@ class AddSubjectFragment(
 
         try {
             subjectStorage.addSubject(subject)
+            subjectStorage.recalculateSubject(subject.code)
             return true
         } catch (e: IllegalArgumentException) {
             e.message?.let { showError(it) }

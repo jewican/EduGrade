@@ -1,27 +1,18 @@
 package com.android.edugrade.data.subject
 
-import android.content.Context
 import android.util.Log
 import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.models.AssessmentType
-import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toSubject
-import com.fatboyindustrial.gsonjavatime.Converters
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import java.io.FileNotFoundException
-import javax.inject.Inject
 
 class SubjectStorage(
     private val scoreStorage: ScoreStorage,
@@ -32,7 +23,7 @@ class SubjectStorage(
 
     private val TAG = "SubjectStorage"
 
-    fun addSubject(subject: Subject) {
+    fun addSubject(subject: Subject, onSuccess: (() -> Unit)? = null) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             Log.wtf(TAG, "User is not authenticated!")
@@ -48,10 +39,11 @@ class SubjectStorage(
         subjectRef.setValue(subject.toMap())
             .addOnSuccessListener {
                 Log.e(TAG, "Subject saved successfully")
-                userRepository.calculateGpa()
+                onSuccess?.invoke()
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Subject saving error! ${e.message}")
+                onSuccess?.invoke()
             }
     }
 
@@ -93,7 +85,9 @@ class SubjectStorage(
             val activitiesMap = scoreList.groupBy { it.assessmentType }
             Log.w("SubjectStorage", "$activitiesMap")
             subject.calculateOverallGrade(activitiesMap)
-            addSubject(subject)
+            addSubject(subject) {
+                userRepository.calculateGpa()
+            }
         }
     }
 
