@@ -2,6 +2,7 @@ package com.android.edugrade.data.subject
 
 import android.content.Context
 import android.util.Log
+import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Score
@@ -22,7 +23,9 @@ import com.google.gson.reflect.TypeToken
 import java.io.FileNotFoundException
 import javax.inject.Inject
 
-class SubjectStorage(private val scoreStorage: ScoreStorage) {
+class SubjectStorage(
+    private val scoreStorage: ScoreStorage,
+    private val userRepository: UserRepository) {
     private var subjects: MutableList<Subject> = mutableListOf()
     private val database = Firebase.database.reference
     private val auth = Firebase.auth
@@ -45,6 +48,7 @@ class SubjectStorage(private val scoreStorage: ScoreStorage) {
         subjectRef.setValue(subject.toMap())
             .addOnSuccessListener {
                 Log.e(TAG, "Subject saved successfully")
+                userRepository.calculateGpa()
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Subject saving error! ${e.message}")
@@ -73,6 +77,7 @@ class SubjectStorage(private val scoreStorage: ScoreStorage) {
         subjectsRef.removeValue()
             .addOnSuccessListener {
                 Log.e(TAG, "Subject saved successfully")
+                userRepository.calculateGpa()
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Subject deletion error! ${e.message}")

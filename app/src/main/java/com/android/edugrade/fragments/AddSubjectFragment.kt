@@ -229,6 +229,9 @@ class AddSubjectFragment(
 
     private fun editSubjectMode() {
         val subject = subjectStorage.getSubject(code!!)
+
+        binding.addSubjectTitle.text = "Edit Subject"
+
         assessmentTypeNodesList.addAll(subject.assessmentTypes)
 
         binding.generalCard.subjectCode.setText(subject.code)

@@ -4,6 +4,7 @@ import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import dagger.Module
+import dagger.Lazy
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -15,7 +16,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSubjectStorage(): SubjectStorage = SubjectStorage(provideScoreStorage())
+    fun provideSubjectStorage(
+        scoreStorage: ScoreStorage,
+        userRepository: UserRepository
+    ): SubjectStorage = SubjectStorage(scoreStorage, userRepository)
 
     @Provides
     @Singleton
@@ -23,5 +27,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(): UserRepository = UserRepository()
+    fun provideUserRepository(
+        subjectStorage: Lazy<SubjectStorage>
+    ): UserRepository = UserRepository(subjectStorage)
 }

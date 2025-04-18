@@ -4,7 +4,7 @@ data class Subject(
     val code: String = "-",
     val description: String = "",
     val instructor: String = "",
-    val units: Int = 0,
+    val units: Int = 1,
     val assessmentTypes: List<AssessmentType> = listOf(),
     val timeslots: List<Timeslot> = listOf(),
     var overallGrade: Double = 0.0
