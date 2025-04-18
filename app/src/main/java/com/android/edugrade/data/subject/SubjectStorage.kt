@@ -64,6 +64,7 @@ class SubjectStorage(
         return Subject()
     }
 
+    // TODO: also delete scores related to subject
     fun deleteSubject(code: String) {
         val userId = auth.currentUser?.uid
         if (userId == null) {

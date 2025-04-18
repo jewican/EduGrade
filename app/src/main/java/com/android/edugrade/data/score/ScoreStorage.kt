@@ -54,7 +54,7 @@ class ScoreStorage {
             return
         }
 
-        val scoresQuery = database
+        database
             .child("scores")
             .child(userId)
             .orderByChild("code")

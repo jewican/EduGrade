@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddSubjectFragment(
-    val code: String? = null
+    val subjectCode: String? = null
 ) : Fragment() {
     private lateinit var binding: FragmentAddSubjectBinding
     private val assessmentTypeNodesList: MutableList<AssessmentType> = mutableListOf()
@@ -70,7 +70,7 @@ class AddSubjectFragment(
             layoutManager = LinearLayoutManager(context)
         }
 
-        if (code != null) {
+        if (subjectCode != null) {
             editSubjectMode()
             return
         }
@@ -138,18 +138,23 @@ class AddSubjectFragment(
         Log.wtf("AddSubjectFragment: Timeslots", timeslots.toString())
         Log.wtf("AddSubjectFragment: AssessmentTypes", assessmentTypeNodesList.toString())
 
-        subjectStorage.addSubject(
-            Subject(
-                code = code,
-                description = description,
-                instructor = instructor,
-                units = units,
-                timeslots = timeslots,
-                assessmentTypes = assessmentTypeNodesList,
-                overallGrade = 5.0
-            )
+        val subject = Subject(
+            code = code,
+            description = description,
+            instructor = instructor,
+            units = units,
+            timeslots = timeslots,
+            assessmentTypes = assessmentTypeNodesList,
+            overallGrade = 5.0
         )
-        return true
+
+        try {
+            subjectStorage.addSubject(subject)
+            return true
+        } catch (e: IllegalArgumentException) {
+            e.message?.let { showError(it) }
+            return false
+        }
     }
 
     private fun getUnits(): Int {
@@ -157,7 +162,7 @@ class AddSubjectFragment(
 
         val selectedUnits = child.unitsChipGroup.checkedChipId
         if (selectedUnits == View.NO_ID) {
-            throw IllegalArgumentException("Please select a day of the week for all timeslots!")
+            throw IllegalArgumentException("Please select the subject's number of units!")
         }
         return (child.root.findViewById<Chip>(selectedUnits).tag as String).toInt()
     }
@@ -228,7 +233,7 @@ class AddSubjectFragment(
     }
 
     private fun editSubjectMode() {
-        val subject = subjectStorage.getSubject(code!!)
+        val subject = subjectStorage.getSubject(subjectCode!!)
 
         binding.addSubjectTitle.text = "Edit Subject"
 
@@ -272,7 +277,7 @@ class AddSubjectFragment(
             binding.recalculateGradeButton.apply {
                 visibility = View.VISIBLE
                 setOnClickListener {
-                    subjectStorage.recalculateSubject(code)
+                    subjectStorage.recalculateSubject(subjectCode)
                     showError("Subject recalculated")
                 }
             }
@@ -288,9 +293,9 @@ class AddSubjectFragment(
 
     private fun deleteSubject() {
         val prompt = AlertDialog.Builder(requireContext()).apply {
-            setMessage("Are you sure you want to delete $code?")
+            setMessage("Are you sure you want to delete $subjectCode?")
                 .setPositiveButton("Yes") { _, _ ->
-                    subjectStorage.deleteSubject(code!!)
+                    subjectStorage.deleteSubject(subjectCode!!)
                     parentFragmentManager.popBackStack()
                 }
                 .setNegativeButton("No") { _, _ ->

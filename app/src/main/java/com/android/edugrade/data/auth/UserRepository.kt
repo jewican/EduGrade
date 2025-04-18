@@ -71,6 +71,10 @@ class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
             Log.w(TAG, "User is not authenticated!")
             return
         }
+        if (subjectStorage.get().getSubjects().isEmpty()) {
+            Log.w(TAG, "User has no subjects, skipping GPA calculation")
+            return
+        }
 
         val rawSum: Double = subjectStorage.get().getSubjects().sumOf { it.overallGrade * it.units }
         Log.w(TAG, "Raw sum GPA of user: $rawSum")

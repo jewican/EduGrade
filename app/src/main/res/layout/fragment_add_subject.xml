@@ -53,7 +53,7 @@
             android:text="DELETE SUBJECT"
             android:textSize="16sp"
             android:paddingHorizontal="48dp"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
     </LinearLayout>
 
