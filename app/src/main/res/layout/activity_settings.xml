@@ -78,6 +78,7 @@
                         android:textSize="30sp" />
 
                     <Switch
+                        android:id="@+id/notif"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
