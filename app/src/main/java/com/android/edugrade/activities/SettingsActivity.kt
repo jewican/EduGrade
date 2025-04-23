@@ -1,7 +1,6 @@
 package com.android.edugrade.activities
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Switch
 import com.android.edugrade.R
@@ -13,23 +12,7 @@ class SettingsActivity : Activity() {
 
         val swNotif = findViewById<Switch>(R.id.notif)
 
-        swNotif.setOnClickListener{
+        // https://www.youtube.com/watch?v=_Z2S63O-1HE
 
-            //https://www.youtube.com/watch?v=hTdEPnsawiM&list=PLSrm9z4zp4mFttjku-3wiRkPH1lDRQLYy&index=2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
     }
 }
