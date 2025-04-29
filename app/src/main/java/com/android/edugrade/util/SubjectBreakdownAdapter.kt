@@ -18,6 +18,7 @@ class SubjectBreakdownAdapter :
 
     class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val subjectName: TextView = itemView.findViewById(R.id.subjectName)
+        val subjectGrade: TextView = itemView.findViewById(R.id.subjectGrade)
         val assessmentTypesList: LinearLayout = itemView.findViewById(R.id.assessmentTypesList)
     }
 
@@ -40,6 +41,7 @@ class SubjectBreakdownAdapter :
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
         val subject = getItem(position)
         holder.subjectName.text = subject.code
+        holder.subjectGrade.text = String.format(Locale("en", "PH"), "%.2f", subject.overallGrade / 100 * 5)
 
         holder.assessmentTypesList.removeAllViews()
 
