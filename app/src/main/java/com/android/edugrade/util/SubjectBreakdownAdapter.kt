@@ -52,7 +52,7 @@ class SubjectBreakdownAdapter :
             val progressIndicator = assessmentView.findViewById<LinearProgressIndicator>(R.id.gradeVisual)
 
             typeText.text = assessmentType.name
-            gradeText.text = String.format(Locale("en", "PH"), "%.1f", assessmentType.grade)
+            gradeText.text = String.format(Locale("en", "PH"), "%.2f", assessmentType.grade / 100 * 5)
             progressIndicator.progress = (assessmentType.grade * 100).toInt()
 
             holder.assessmentTypesList.addView(assessmentView)
