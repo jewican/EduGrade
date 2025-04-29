@@ -31,20 +31,21 @@ class SubjectsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get subjects list
-        val subjects = subjectStorage.getSubjects()
+        val recyclerView = binding.subjectsList
+        recyclerView.layoutManager = LinearLayoutManager(context)
 
-        binding.subjectsList.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = SubjectCardAdapter(
+        subjectStorage.subjects.observe(viewLifecycleOwner) { subjects ->
+            recyclerView.adapter = SubjectCardAdapter(
                 subjects = subjects,
                 onClick = { code ->
                     setCurrentFragment(AddSubjectFragment(code))
-                })
+                }
+            )
         }
 
         binding.addSubjectButton.setOnClickListener {
             setCurrentFragment(AddSubjectFragment())
         }
     }
+
 }

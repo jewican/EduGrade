@@ -152,8 +152,9 @@ class AddSubjectFragment(
         )
 
         try {
-            subjectStorage.addSubject(subject)
-            subjectStorage.recalculateSubject(subject.code)
+            subjectStorage.addSubject(subject) {
+                subjectStorage.recalculateSubject(subject.code)
+            }
             return true
         } catch (e: IllegalArgumentException) {
             e.message?.let { showError(it) }

@@ -45,6 +45,43 @@ class ScoreStorage {
             }
     }
 
+    fun deleteScoresForSubject(subjectCode: String) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.wtf(TAG, "User is not authenticated!")
+            return
+        }
+
+        val scoresRef = database.child("scores").child(userId)
+
+        scoresRef.orderByChild("code").equalTo(subjectCode).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val scoresToDelete = snapshot.children.map { it.key }.toList()
+
+                if (scoresToDelete.isNotEmpty()) {
+                    val deleteTasks = scoresToDelete.map { key ->
+                        scoresRef.child(key!!).removeValue()
+                    }
+
+                    for (deleteTask in deleteTasks) {
+                        deleteTask.addOnSuccessListener {
+                            Log.d(TAG, "Score successfully deleted for subject: $subjectCode")
+                        }
+                        deleteTask.addOnFailureListener { e ->
+                            Log.e(TAG, "Error deleting score: ${e.message}")
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "No scores found for subject code: $subjectCode")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Error querying scores: ${error.message}")
+            }
+        })
+    }
+
     fun getAllScores(): List<Score> = scores
 
     fun getScores(code: String, onResult: (List<Score>) -> Unit) {

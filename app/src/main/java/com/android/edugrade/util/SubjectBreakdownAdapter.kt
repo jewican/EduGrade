@@ -5,18 +5,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.edugrade.R
 import com.android.edugrade.models.Subject
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.Locale
 
-class SubjectBreakdownAdapter(private val subjects: List<Subject>) :
-    RecyclerView.Adapter<SubjectBreakdownAdapter.SubjectViewHolder>() {
+class SubjectBreakdownAdapter :
+    ListAdapter<Subject, SubjectBreakdownAdapter.SubjectViewHolder>(SubjectDiffCallback()) {
 
     class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val subjectName: TextView = itemView.findViewById(R.id.subjectName)
         val assessmentTypesList: LinearLayout = itemView.findViewById(R.id.assessmentTypesList)
+    }
+
+    class SubjectDiffCallback : DiffUtil.ItemCallback<Subject>() {
+        override fun areItemsTheSame(oldItem: Subject, newItem: Subject): Boolean {
+            return oldItem.code == newItem.code
+        }
+
+        override fun areContentsTheSame(oldItem: Subject, newItem: Subject): Boolean {
+            return oldItem == newItem
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
@@ -26,7 +38,7 @@ class SubjectBreakdownAdapter(private val subjects: List<Subject>) :
     }
 
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val subject = subjects[position]
+        val subject = getItem(position)
         holder.subjectName.text = subject.code
 
         holder.assessmentTypesList.removeAllViews()
@@ -46,6 +58,4 @@ class SubjectBreakdownAdapter(private val subjects: List<Subject>) :
             holder.assessmentTypesList.addView(assessmentView)
         }
     }
-
-    override fun getItemCount() = subjects.size
 }

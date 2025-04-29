@@ -1,6 +1,8 @@
 package com.android.edugrade.data.subject
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.models.AssessmentType
@@ -17,11 +19,12 @@ import com.google.firebase.database.database
 class SubjectStorage(
     private val scoreStorage: ScoreStorage,
     private val userRepository: UserRepository) {
-    private var subjects: MutableList<Subject> = mutableListOf()
     private val database = Firebase.database.reference
     private val auth = Firebase.auth
-
     private val TAG = "SubjectStorage"
+
+    private val _subjects = MutableLiveData<List<Subject>>()
+    val subjects: LiveData<List<Subject>> = _subjects
 
     fun addSubject(subject: Subject, onSuccess: (() -> Unit)? = null) {
         val userId = auth.currentUser?.uid
@@ -30,7 +33,7 @@ class SubjectStorage(
             return
         }
 
-        Log.wtf(TAG, "Attempting to save ${subject.code}...")
+        Log.wtf(TAG, "Attempting to save $subject...")
 
         val subjectRef = database.child("subjects")
             .child(userId)
@@ -48,13 +51,9 @@ class SubjectStorage(
     }
 
     fun getSubject(code: String): Subject {
-        for (subject in subjects)  {
-            if (subject.code == code) {
-                return subject
-            }
-        }
-        return Subject()
+        return _subjects.value?.firstOrNull { it.code == code } ?: Subject()
     }
+
 
     // TODO: also delete scores related to subject
     fun deleteSubject(code: String) {
@@ -69,15 +68,14 @@ class SubjectStorage(
 
         subjectsRef.removeValue()
             .addOnSuccessListener {
-                Log.e(TAG, "Subject saved successfully")
+                Log.e(TAG, "Subject deleted successfully")
+                scoreStorage.deleteScoresForSubject(code)
                 userRepository.calculateGpa()
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Subject deletion error! ${e.message}")
             }
     }
-
-    fun getSubjects(): List<Subject> = subjects
 
     fun recalculateSubject(code: String) {
         val subject = getSubject(code)
@@ -89,15 +87,6 @@ class SubjectStorage(
                 userRepository.calculateGpa()
             }
         }
-    }
-
-    fun getAssessmentTypes(code: String): List<AssessmentType> {
-        val index = subjects.indexOfFirst { it.code == code }
-        if (index == -1) {
-            Log.e("SubjectStorage", "Subject [${code}] not found! Returning empty assessment list")
-            return listOf()
-        }
-        return subjects[index].assessmentTypes
     }
 
     fun loadSubjects() {
@@ -113,17 +102,18 @@ class SubjectStorage(
         subjectsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.e(TAG, "Subject data received! Building subjects")
-                subjects = mutableListOf()
+                val loadedSubjects = mutableListOf<Subject>()
                 for (subjectSnapshot in snapshot.children) {
                     try {
                         val map = subjectSnapshot.value as Map<String, Any>
                         val subject = map.toSubject()
-                        subjects.add(subject)
+                        loadedSubjects.add(subject)
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing subject: ${e.message}")
                     }
                 }
-                Log.e(TAG, "Retrieved subjects: $subjects")
+                _subjects.value = loadedSubjects
+                Log.e(TAG, "Retrieved subjects: $loadedSubjects")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -131,5 +121,6 @@ class SubjectStorage(
             }
         })
     }
+
 
 }

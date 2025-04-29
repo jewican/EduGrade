@@ -37,7 +37,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = SubjectBreakdownAdapter(subjectStorage.getSubjects())
+
+            val breakdownAdapter = SubjectBreakdownAdapter()
+            subjectStorage.subjects.observe(viewLifecycleOwner) { updatedSubjects ->
+                breakdownAdapter.submitList(updatedSubjects)
+            }
+            adapter = breakdownAdapter
         }
 
         lifecycleScope.launch {

@@ -37,17 +37,20 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val subjectsList = subjectStorage.getSubjects().map { it.code }
+        subjectStorage.subjects.observe(viewLifecycleOwner) { subjectList ->
+            val subjectsList = subjectList.map { it.code }
 
-        binding.subjectTextView.setAdapter(ArrayAdapter(requireContext(), R.layout.subject_list_item, subjectsList))
+            val subjectAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, subjectsList)
+            binding.subjectTextView.setAdapter(subjectAdapter)
 
-        binding.subjectTextView.setOnItemClickListener { _, _, position, _ ->
-            val subject = subjectStorage.getSubject(subjectsList[position])
-            val assessmentTypes = subject.getLeafNodes()
-            val assessmentTypesList = assessmentTypes.map { it.name }
-            binding.assessmentTypeTextView.setAdapter(ArrayAdapter(requireContext(), R.layout.subject_list_item, assessmentTypesList))
+            binding.subjectTextView.setOnItemClickListener { _, _, position, _ ->
+                val selectedSubject = subjectList[position]
+                val assessmentTypesList = selectedSubject.getLeafNodes().map { it.name }
+                val assessmentAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, assessmentTypesList)
+                binding.assessmentTypeTextView.setAdapter(assessmentAdapter)
+            }
         }
-        
+
         binding.saveScoreButton.setOnClickListener {
             saveScore()
         }
