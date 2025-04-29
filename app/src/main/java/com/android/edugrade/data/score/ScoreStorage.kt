@@ -84,7 +84,7 @@ class ScoreStorage {
 
     fun getAllScores(): List<Score> = scores
 
-    fun getScores(code: String, onResult: (List<Score>) -> Unit) {
+    fun getScoresOfSubject(code: String, onResult: (List<Score>) -> Unit) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             Log.e(TAG, "User is not authenticated!")
@@ -94,7 +94,7 @@ class ScoreStorage {
         database
             .child("scores")
             .child(userId)
-            .orderByChild("code")
+            .orderByChild("dateAdded")
             .equalTo(code)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -104,6 +104,7 @@ class ScoreStorage {
                         val score = scoreMap.toScore()
                         scores.add(score)
                     }
+                    scores.reverse()
                     onResult(scores)
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -123,6 +124,7 @@ class ScoreStorage {
         val scoresRef = database
             .child("scores")
             .child(userId)
+            .orderByChild("dateAdded")
 
         scoresRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -136,8 +138,7 @@ class ScoreStorage {
                         Log.e(TAG, "Error parsing score: ${e.message}")
                     }
                 }
-
-
+                scores.reverse()
                 Log.e(TAG, "Retrieved scores: $scores")
             }
 

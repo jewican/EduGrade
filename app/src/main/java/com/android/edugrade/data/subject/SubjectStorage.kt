@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
-import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toSubject
@@ -79,7 +78,7 @@ class SubjectStorage(
 
     fun recalculateSubject(code: String) {
         val subject = getSubject(code)
-        scoreStorage.getScores(code) { scoreList ->
+        scoreStorage.getScoresOfSubject(code) { scoreList ->
             val activitiesMap = scoreList.groupBy { it.assessmentType }
             Log.w("SubjectStorage", "$activitiesMap")
             subject.calculateOverallGrade(activitiesMap)
