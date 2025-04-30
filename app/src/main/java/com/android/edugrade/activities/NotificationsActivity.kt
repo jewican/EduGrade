@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.widget.Switch
 import com.android.edugrade.R
 
-class SettingsActivity : Activity() {
+class NotificationsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_notifications)
 
         val swNotif = findViewById<Switch>(R.id.notif)
 

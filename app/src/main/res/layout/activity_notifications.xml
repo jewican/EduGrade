@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:padding="20dp"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="activities.SettingsActivity">
+    tools:context="activities.NotificationsActivity">
 
     <ImageView
         android:id="@+id/imageView0"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintVertical_bias="0.1"
@@ -31,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.28" />
 
-    <ImageView
+    <Button
         android:id="@+id/imageView1"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -45,8 +48,8 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="350dp"
-        android:layout_height="375dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +155,8 @@
     </ScrollView>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log out"
         android:textSize="20sp"
@@ -162,4 +166,4 @@
         app:layout_constraintTop_toBottomOf="@+id/scrollView2"
         app:layout_constraintVertical_bias="0.15"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

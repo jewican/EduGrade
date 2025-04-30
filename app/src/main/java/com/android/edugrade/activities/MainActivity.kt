@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         setCurrentFragment(homeFragment)
 
         settingsNotif.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity(Intent(this, NotificationsActivity::class.java))
         }
 
         bottomNavigationView.setOnItemSelectedListener {

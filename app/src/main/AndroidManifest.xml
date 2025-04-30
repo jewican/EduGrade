@@ -19,7 +19,7 @@
             android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.NotificationsActivity"
             android:exported="false"/>
         <activity
             android:name=".activities.DevPageActivity"

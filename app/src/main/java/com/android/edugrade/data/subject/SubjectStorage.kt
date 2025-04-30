@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.BarChartData
 import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
@@ -27,6 +28,7 @@ class SubjectStorage(
     private val scoreStorage: ScoreStorage,
     private val userRepository: UserRepository) {
     private var subjects: MutableList<Subject> = mutableListOf()
+    private var barcharts: MutableList<BarChartData> = mutableListOf()
     private val database = Firebase.database.reference
     private val auth = Firebase.auth
 
@@ -83,6 +85,8 @@ class SubjectStorage(
                 Log.e(TAG, "Subject deletion error! ${e.message}")
             }
     }
+
+    fun getBarCharts(): List<BarChartData> = barcharts
 
     fun getSubjects(): List<Subject> = subjects
 
