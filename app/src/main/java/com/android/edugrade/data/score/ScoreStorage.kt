@@ -94,7 +94,7 @@ class ScoreStorage {
         database
             .child("scores")
             .child(userId)
-            .orderByChild("dateAdded")
+            .orderByChild("code")
             .equalTo(code)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -105,6 +105,7 @@ class ScoreStorage {
                         scores.add(score)
                     }
                     scores.reverse()
+                    Log.w(TAG, "Scores of $code: $scores")
                     onResult(scores)
                 }
                 override fun onCancelled(error: DatabaseError) {
