@@ -79,8 +79,12 @@ class SubjectStorage(
     fun recalculateSubject(code: String) {
         val subject = getSubject(code)
         scoreStorage.getScoresOfSubject(code) { scoreList ->
+            if (scoreList.isEmpty()) {
+                Log.w("SubjectStorage", "No scores found for subject: $code")
+            }
+
             val activitiesMap = scoreList.groupBy { it.assessmentType }
-            Log.w("SubjectStorage", "$activitiesMap")
+            Log.w("SubjectStorage", "Activities map: $activitiesMap")
             subject.calculateOverallGrade(activitiesMap)
             addSubject(subject) {
                 userRepository.calculateGpa()

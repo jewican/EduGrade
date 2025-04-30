@@ -11,7 +11,9 @@ import com.android.edugrade.R
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.databinding.FragmentAddScoreBinding
+import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Score
+import com.android.edugrade.models.Subject
 import com.android.edugrade.util.showError
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -39,13 +41,22 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
 
         subjectStorage.subjects.observe(viewLifecycleOwner) { subjectList ->
             val subjectsList = subjectList.map { it.code }
+            var selectedSubject = Subject()
+            var semesterHalves: List<String>
 
             val subjectAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, subjectsList)
             binding.subjectTextView.setAdapter(subjectAdapter)
 
             binding.subjectTextView.setOnItemClickListener { _, _, position, _ ->
-                val selectedSubject = subjectList[position]
-                val assessmentTypesList = selectedSubject.getLeafNodes().map { it.name }
+                selectedSubject = subjectList[position]
+                semesterHalves = selectedSubject.assessmentTypes.map { it.name }
+                val semesterAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, semesterHalves)
+                binding.semesterHalfTextView.setAdapter(semesterAdapter)
+            }
+
+            binding.semesterHalfTextView.setOnItemClickListener { _, _, position, _ ->
+                val selectedHalf = selectedSubject.assessmentTypes[position]
+                val assessmentTypesList = selectedHalf.getLeafNodes().map { it.name }
                 val assessmentAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, assessmentTypesList)
                 binding.assessmentTypeTextView.setAdapter(assessmentAdapter)
             }

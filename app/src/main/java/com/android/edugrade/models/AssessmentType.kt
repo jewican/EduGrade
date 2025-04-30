@@ -38,4 +38,16 @@ data class AssessmentType(
         Log.wtf("GradeCalculation", "Final grade for [$name]: $grade")
         return grade
     }
+
+    fun getLeafNodes(assessments: List<AssessmentType> = assessmentTypes): List<AssessmentType> {
+        val leafNodes = mutableListOf<AssessmentType>()
+        for (assessment in assessments) {
+            if (assessment.assessmentTypes.isEmpty()) {
+                leafNodes.add(assessment)
+            } else {
+                leafNodes.addAll(getLeafNodes(assessment.assessmentTypes))
+            }
+        }
+        return leafNodes
+    }
 }
