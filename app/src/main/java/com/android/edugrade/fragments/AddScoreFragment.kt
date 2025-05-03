@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.android.edugrade.R
 import com.android.edugrade.data.score.ScoreStorage
@@ -26,6 +25,8 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
     lateinit var subjectStorage: SubjectStorage
     @Inject
     lateinit var scoreStorage: ScoreStorage
+
+    lateinit var assessmentTypes: List<AssessmentType>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +57,8 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
 
             binding.semesterHalfTextView.setOnItemClickListener { _, _, position, _ ->
                 val selectedHalf = selectedSubject.assessmentTypes[position]
-                val assessmentTypesList = selectedHalf.getLeafNodes().map { it.name }
+                assessmentTypes = selectedHalf.getLeafNodes()
+                val assessmentTypesList = assessmentTypes.map { it.name }
                 val assessmentAdapter = ArrayAdapter(requireContext(), R.layout.subject_list_item, assessmentTypesList)
                 binding.assessmentTypeTextView.setAdapter(assessmentAdapter)
             }
@@ -69,7 +71,7 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
 
     private fun saveScore() {
         val code = binding.subjectTextView.text.toString()
-        val assessmentType = binding.assessmentTypeTextView.text.toString()
+        val assessmentType = assessmentTypes.find { it.name == binding.assessmentTypeTextView.text.toString() }
         val name = binding.etActName.text.toString()
         val userScore = binding.etScore.text.toString().toDouble()
         val totalScore = binding.etTscore.text.toString().toDouble()
@@ -78,7 +80,7 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
         scoreStorage.addScore(
             Score(
                 code = code,
-                assessmentType = assessmentType,
+                assessmentTypeId = assessmentType!!.id,
                 name = name,
                 userScore = userScore,
                 totalScore = totalScore,

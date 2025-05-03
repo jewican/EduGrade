@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class Score(
     val code: String,
-    val assessmentType: String,
+    val assessmentTypeId: String,
     val name: String,
     val userScore: Double,
     val totalScore: Double,

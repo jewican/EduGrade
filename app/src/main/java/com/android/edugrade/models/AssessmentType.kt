@@ -1,8 +1,10 @@
 package com.android.edugrade.models
 
 import android.util.Log
+import java.util.UUID
 
 data class AssessmentType(
+    var id: String = UUID.randomUUID().toString(),
     var name: String = "",
     var grade: Double = 100.0,
     var weight: Double = 0.0,
@@ -16,7 +18,7 @@ data class AssessmentType(
             return grade
         }
 
-        val activities = activityMap[name]
+        val activities = activityMap[id]
 
         if (activities == null) {
             Log.w("GradeCalculation", "No activities found for [$name] | Using default grade: $grade")

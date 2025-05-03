@@ -83,7 +83,7 @@ class SubjectStorage(
                 Log.w("SubjectStorage", "No scores found for subject: $code")
             }
 
-            val activitiesMap = scoreList.groupBy { it.assessmentType }
+            val activitiesMap = scoreList.groupBy { it.assessmentTypeId }
             Log.w("SubjectStorage", "Activities map: $activitiesMap")
             subject.calculateOverallGrade(activitiesMap)
             addSubject(subject) {

@@ -2,7 +2,6 @@ package com.android.edugrade.util
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -66,6 +65,7 @@ fun Map<String, Any>.toTimeslot(): Timeslot {
 
 fun AssessmentType.toMap(): Map<String, Any> {
     return mapOf(
+        "id" to id,
         "name" to name,
         "grade" to grade,
         "weight" to weight,
@@ -75,6 +75,7 @@ fun AssessmentType.toMap(): Map<String, Any> {
 
 fun Map<String, Any>.toAssessmentType(): AssessmentType {
     return AssessmentType(
+        id = this["id"] as String,
         name = this["name"] as String,
         grade = (this["grade"] as Number).toDouble(),
         weight = (this["weight"] as Number).toDouble(),
@@ -87,7 +88,7 @@ fun Map<String, Any>.toAssessmentType(): AssessmentType {
 fun Score.toMap(): Map<String, Any> {
     return mapOf(
         "code" to code,
-        "assessmentType" to assessmentType,
+        "assessmentTypeId" to assessmentTypeId,
         "name" to name,
         "userScore" to userScore,
         "totalScore" to totalScore,
@@ -102,7 +103,7 @@ fun Map<String, Any>.toScore(): Score {
 
     return Score(
         code = this["code"] as String,
-        assessmentType = this["assessmentType"] as String,
+        assessmentTypeId = this["assessmentTypeId"] as String,
         name = this["name"] as String,
         userScore = userScore,
         totalScore = totalScore,
