@@ -60,7 +60,11 @@ class AddSubjectFragment(
         }
 
         binding.addSubjectButton.setOnClickListener {
-            if (saveSubject()) parentFragmentManager.popBackStack()
+            if (subjectStorage.getSubject(binding.generalCard.subjectCode.text.toString()).code.isNotEmpty()) {
+                showError("Subject already exists!")
+            } else {
+                saveSubject()
+            }
         }
 
         semesterPartAdapter = GradingSystemAdapter(
@@ -288,7 +292,12 @@ class AddSubjectFragment(
             }
         }
 
-        binding.addSubjectButton.text = "SAVE CHANGES"
+        binding.addSubjectButton.apply {
+            text = "SAVE CHANGES"
+            setOnClickListener {
+                if (saveSubject()) parentFragmentManager.popBackStack()
+            }
+        }
 
         binding.deleteSubjectButton.visibility = View.VISIBLE
         binding.deleteSubjectButton.setOnClickListener {
