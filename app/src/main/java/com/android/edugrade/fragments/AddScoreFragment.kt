@@ -71,16 +71,33 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
 
     private fun saveScore() {
         val code = binding.subjectTextView.text.toString()
-        val assessmentType = assessmentTypes.find { it.name == binding.assessmentTypeTextView.text.toString() }
         val name = binding.etActName.text.toString()
-        val userScore = binding.etScore.text.toString().toDouble()
-        val totalScore = binding.etTscore.text.toString().toDouble()
         val dateAdded = LocalDateTime.now()
+
+        if (code.isBlank() || name.isBlank()) {
+            showError("Please specify all fields!")
+            return
+        }
+
+        val userScore: Double
+        val totalScore: Double
+        val assessmentType: AssessmentType
+        try {
+            assessmentType = assessmentTypes.find { it.name == binding.assessmentTypeTextView.text.toString() }!!
+            userScore = binding.etScore.text.toString().toDouble()
+            totalScore = binding.etTscore.text.toString().toDouble()
+        } catch (e: NumberFormatException) {
+            showError("Invalid score(s) entered!")
+            return
+        } catch (e: NullPointerException) {
+            showError("Please select an assessment type!")
+            return
+        }
 
         scoreStorage.addScore(
             Score(
                 code = code,
-                assessmentTypeId = assessmentType!!.id,
+                assessmentTypeId = assessmentType.id,
                 name = name,
                 userScore = userScore,
                 totalScore = totalScore,

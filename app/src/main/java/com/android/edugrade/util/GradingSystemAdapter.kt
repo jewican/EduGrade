@@ -45,7 +45,7 @@ class GradingSystemAdapter(
             binding.activityWeight.apply {
                 removeTextChangedListener(this.tag as? TextWatcher)
                 val weightTextWatcher = doAfterTextChanged { text ->
-                    assessmentTypeNode.weight = text.toString().toDouble()
+                    assessmentTypeNode.weight = text.toString().toDoubleOrNull() ?: 0.0
                 }
                 tag = weightTextWatcher
             }
