@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.android.edugrade.R
 import com.android.edugrade.models.AssessmentType
+import com.android.edugrade.models.GpaSnapshot
 import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
@@ -116,6 +117,24 @@ fun Map<String, Any>.toScore(): Score {
         name = this["name"] as String,
         userScore = userScore,
         totalScore = totalScore,
+        dateAdded = dateAdded
+    )
+}
+
+fun GpaSnapshot.toMap(): Map<String, Any> {
+    return mapOf(
+        "gpa" to gpa,
+        "scoreId" to scoreId,
+        "dateAdded" to dateAdded.toString()
+    )
+}
+
+fun Map<String, Any>.toGpaSnapshot(): GpaSnapshot {
+    val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
+
+    return GpaSnapshot(
+        gpa = this["gpa"] as Double,
+        scoreId = this["scoreId"] as String,
         dateAdded = dateAdded
     )
 }

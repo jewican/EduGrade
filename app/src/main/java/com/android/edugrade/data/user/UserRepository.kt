@@ -4,18 +4,27 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.android.edugrade.data.subject.SubjectStorage
+import com.android.edugrade.models.GpaSnapshot
+import com.android.edugrade.models.Subject
+import com.android.edugrade.util.toMap
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
 import dagger.Lazy
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDateTime
+import javax.inject.Inject
 
-class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
+class UserRepository @Inject constructor(
+    private val subjectStorage: Lazy<SubjectStorage>,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference
+) {
     private val TAG = "UserRepository"
-    private val auth: FirebaseAuth = Firebase.auth
-    private val usersRef = Firebase.database.reference.child("users")
+    private val usersRef = database.child("users")
     private var user: FirebaseUser? = null
 
     fun currentUser() = user
@@ -28,11 +37,17 @@ class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
 
         return try {
             val data = usersRef.child(user!!.uid).child("currentGpa").get().await()
-            when (val value = data.value) {
+            val rawGpa = when (val value = data.value) {
                 is Double -> value
                 is Long -> value.toDouble()
                 else -> 0.0
-            }.also { Log.w(TAG, "User's current GPA: $it") }
+            }
+
+            val fivePointGpa = rawGpa / 100 * 5
+            Log.w(TAG, "User's current GPA (raw): $rawGpa")
+            Log.w(TAG, "User's current GPA (5-point): $fivePointGpa")
+
+            fivePointGpa
         } catch (e: Exception) {
             Log.w(TAG, "Error getting current GPA! ${e.message}")
             0.0
@@ -58,17 +73,17 @@ class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
         }
     }
 
-    fun calculateGpa() {
+    // only save a snapshot of gpa if a score was added
+    fun calculateGpa(scoreId: String? = null) {
         if (user == null) {
             Log.w(TAG, "User is not authenticated!")
             return
         }
 
-        val subjectLiveData: LiveData<List<com.android.edugrade.models.Subject>> =
-            subjectStorage.get().subjects
+        val subjectLiveData = subjectStorage.get().subjects
 
-        val observer = object : Observer<List<com.android.edugrade.models.Subject>> {
-            override fun onChanged(subjects: List<com.android.edugrade.models.Subject>) {
+        val observer = object : Observer<List<Subject>> {
+            override fun onChanged(subjects: List<Subject>) {
                 subjectLiveData.removeObserver(this)
 
                 if (subjects.isEmpty()) {
@@ -84,7 +99,23 @@ class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
                 Log.w(TAG, "Calculated GPA of user: $gpa")
                 Log.w(TAG, "As 5-point GPA: $finalGpa")
 
-                usersRef.child(user!!.uid).child("currentGpa").setValue(finalGpa)
+                usersRef.child(user!!.uid).child("currentGpa").setValue(gpa)
+
+                if (scoreId != null) {
+                    val gpaHistoryRef = usersRef.child(user!!.uid).child("gpaSnapshots").push()
+                    val snapshot = GpaSnapshot(
+                        gpa = gpa,
+                        scoreId = scoreId,
+                        dateAdded = LocalDateTime.now()
+                    )
+                    gpaHistoryRef.setValue(snapshot.toMap())
+                        .addOnSuccessListener {
+                            Log.w(TAG, "Saved GPA snapshot successfully")
+                        }
+                        .addOnFailureListener {
+                            Log.w(TAG, "GPA snapshot saving error: ${it.message}")
+                        }
+                }
             }
         }
 

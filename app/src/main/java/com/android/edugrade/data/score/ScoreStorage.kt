@@ -1,23 +1,28 @@
 package com.android.edugrade.data.score
 
 import android.util.Log
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.models.Score
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toScore
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.gson.GsonBuilder
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class ScoreStorage {
+class ScoreStorage @Inject constructor(
+    private val userRepository: UserRepository,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference
+) {
     private var scores: MutableList<Score> = mutableListOf()
-    private val database = Firebase.database.reference
-    private val auth = Firebase.auth
-
     private val TAG = "ScoreStorage"
 
     fun addScore(
@@ -39,6 +44,7 @@ class ScoreStorage {
 
         scoreRef.setValue(score.toMap())
             .addOnSuccessListener {
+                userRepository.calculateGpa(score.id)
                 Log.e(TAG, "Score saved successfully")
                 onSuccess()
             }
@@ -46,6 +52,47 @@ class ScoreStorage {
                 Log.e(TAG, "Score saving error! ${e.message}")
                 onFailure(e)
             }
+    }
+
+    fun getScore(scoreId: String): Score? {
+        return scores.find { it.id == scoreId }
+    }
+
+    fun getAllScores(): List<Score> = scores
+
+    fun getScoresOfSubject(code: String, onResult: (List<Score>) -> Unit) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            return
+        }
+
+        database
+            .child("scores")
+            .child(userId)
+            .orderByChild("code")
+            .equalTo(code)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val scores = mutableListOf<Score>()
+                    for (scoreSnapshot in snapshot.children) {
+                        try {
+                            val scoreMap = scoreSnapshot.value as Map<String, Any>
+                            val score = scoreMap.toScore()
+                            scores.add(score)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing score: ${e.message}")
+                        }
+                    }
+                    scores.reverse()
+                    Log.w(TAG, "Scores of $code: $scores")
+                    onResult(scores)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    println("Error: ${error.message}")
+                }
+            })
     }
 
     fun deleteScoresForSubject(subjectCode: String) {
@@ -82,43 +129,6 @@ class ScoreStorage {
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e(TAG, "Error querying scores: ${error.message}")
-                }
-            })
-    }
-
-    fun getAllScores(): List<Score> = scores
-
-    fun getScoresOfSubject(code: String, onResult: (List<Score>) -> Unit) {
-        val userId = auth.currentUser?.uid
-        if (userId == null) {
-            Log.e(TAG, "User is not authenticated!")
-            return
-        }
-
-        database
-            .child("scores")
-            .child(userId)
-            .orderByChild("code")
-            .equalTo(code)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val scores = mutableListOf<Score>()
-                    for (scoreSnapshot in snapshot.children) {
-                        try {
-                            val scoreMap = scoreSnapshot.value as Map<String, Any>
-                            val score = scoreMap.toScore()
-                            scores.add(score)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error parsing score: ${e.message}")
-                        }
-                    }
-                    scores.reverse()
-                    Log.w(TAG, "Scores of $code: $scores")
-                    onResult(scores)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    println("Error: ${error.message}")
                 }
             })
     }

@@ -9,19 +9,23 @@ import com.android.edugrade.models.Subject
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toSubject
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.gson.GsonBuilder
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class SubjectStorage(
+class SubjectStorage @Inject constructor(
     private val scoreStorage: ScoreStorage,
-    private val userRepository: UserRepository) {
-    private val database = Firebase.database.reference
-    private val auth = Firebase.auth
+    private val userRepository: UserRepository,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference
+) {
     private val TAG = "SubjectStorage"
 
     private val _subjects = MutableLiveData<List<Subject>>()
