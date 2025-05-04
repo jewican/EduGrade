@@ -3,8 +3,10 @@ package com.android.edugrade.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.autofill.AutofillManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.android.edugrade.R
 import com.android.edugrade.data.auth.UserRepository
 import com.android.edugrade.databinding.ActivityLoginBinding
 import com.android.edugrade.util.showError
@@ -35,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             loginUser()
         }
+
     }
 
     private fun loginUser() {
