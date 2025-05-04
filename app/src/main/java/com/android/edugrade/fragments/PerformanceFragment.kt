@@ -44,8 +44,6 @@ class PerformanceFragment : Fragment(R.layout.fragment_performance_overview) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        dataListing()
-
 //        val barData = subjectStorage.getSubjects()
 //
         for (i in 0..5){
@@ -91,54 +89,9 @@ class PerformanceFragment : Fragment(R.layout.fragment_performance_overview) {
         }
 
         binding.barChart.invalidate()
+
+
+
     }
-
-//    private fun dataListing(){
-//
-
-//
-//       setChart()
-//    }
-
-//    private fun setChart(){
-//        binding.barChart.description.isEnabled = false
-//        binding.barChart.setMaxVisibleValueCount(5)
-//        binding.barChart.setPinchZoom(false)
-//        binding.barChart.setDrawBarShadow(false)
-//        binding.barChart.setDrawGridBackground(false)
-//
-//        val xAxis = binding.barChart.xAxis
-//
-//        xAxis.position = XAxis.XAxisPosition.BOTTOM
-//        xAxis.setDrawGridLines(false)
-//        xAxis.granularity = 1f
-//        xAxis.isGranularityEnabled = true
-//        xAxis.valueFormatter = IndexAxisValueFormatter(arrayListOf("Subjects", "GPA"))
-//
-//        binding.barChart.axisLeft.setDrawGridLines(false)
-//        binding.barChart.legend.isEnabled = false
-//
-//        val barDataSetter: BarDataSet
-//
-//        if (binding.barChart.data != null && binding.barChart.data.dataSetCount > 0){
-//            barDataSetter = binding.barChart.data.getDataSetByIndex(0) as BarDataSet
-//            barDataSetter.values = subjectS
-//            binding.barChart.data.notifyDataChanged()
-//            binding.barChart.notifyDataSetChanged()
-//        } else {
-//            barDataSetter = BarDataSet(subjectS, "Subject")
-//            barDataSetter.setColors(*ColorTemplate.VORDIPLOM_COLORS)
-//            barDataSetter.setDrawValues(false)
-//
-//            val dataSet = ArrayList<IBarDataSet>()
-//            dataSet.add(barDataSetter)
-//
-//            val data = BarData(dataSet)
-//            binding.barChart.data = data
-//            binding.barChart.setFitBars(true)
-//        }
-//
-//        binding.barChart.invalidate()
-//    }
 
 }
