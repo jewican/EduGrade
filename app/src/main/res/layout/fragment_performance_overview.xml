@@ -25,7 +25,7 @@
                 android:textStyle="bold"
                 android:textSize="32sp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
