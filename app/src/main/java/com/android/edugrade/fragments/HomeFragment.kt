@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.R
-import com.android.edugrade.data.auth.UserRepository
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
 import com.android.edugrade.data.subject.SubjectStorage

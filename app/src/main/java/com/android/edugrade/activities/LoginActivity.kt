@@ -3,16 +3,11 @@ package com.android.edugrade.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.autofill.AutofillManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.android.edugrade.R
-import com.android.edugrade.data.auth.UserRepository
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.ActivityLoginBinding
-import com.android.edugrade.util.showError
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import com.android.edugrade.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.passwordEditText.text.toString().trim()
 
         if (email.isBlank() || password.isBlank()) {
-            showError("Please enter your email and password!")
+            showDialog("Please enter your email and password!")
             return
         }
 
@@ -55,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(Intent(context, MainActivity::class.java))
                 },
                 onFailure = {
-                    showError("Error logging in: ${it.message}")
+                    showDialog("Error logging in: ${it.message}")
                 })
         }
     }

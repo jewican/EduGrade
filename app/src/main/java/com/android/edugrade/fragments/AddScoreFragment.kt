@@ -13,7 +13,7 @@ import com.android.edugrade.databinding.FragmentAddScoreBinding
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
-import com.android.edugrade.util.showError
+import com.android.edugrade.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -75,7 +75,7 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
         val dateAdded = LocalDateTime.now()
 
         if (code.isBlank() || name.isBlank()) {
-            showError("Please specify all fields!")
+            showDialog("Please specify all fields!")
             return
         }
 
@@ -87,10 +87,10 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
             userScore = binding.etScore.text.toString().toDouble()
             totalScore = binding.etTscore.text.toString().toDouble()
         } catch (e: NumberFormatException) {
-            showError("Invalid score(s) entered!")
+            showDialog("Invalid score(s) entered!")
             return
         } catch (e: NullPointerException) {
-            showError("Please select an assessment type!")
+            showDialog("Please select an assessment type!")
             return
         }
 
@@ -108,7 +108,7 @@ class AddScoreFragment : Fragment(R.layout.fragment_add_score) {
                 parentFragmentManager.popBackStack()
             },
             onFailure = { exception ->
-                showError("Error saving score! $exception")
+                showDialog("Error saving score! $exception")
             }
         )
     }

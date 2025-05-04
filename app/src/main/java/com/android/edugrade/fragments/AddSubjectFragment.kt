@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.edugrade.data.auth.UserRepository
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.AddSubjectActivityTypesItemBinding
 import com.android.edugrade.databinding.AddSubjectTimeslotItemBinding
 import com.android.edugrade.databinding.FragmentAddSubjectBinding
@@ -19,7 +19,7 @@ import com.android.edugrade.models.Subject
 import com.android.edugrade.models.Timeslot
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.util.GradingSystemAdapter
-import com.android.edugrade.util.showError
+import com.android.edugrade.util.showDialog
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
@@ -61,7 +61,7 @@ class AddSubjectFragment(
 
         binding.addSubjectButton.setOnClickListener {
             if (subjectStorage.getSubject(binding.generalCard.subjectCode.text.toString()).code.isNotEmpty()) {
-                showError("Subject already exists!")
+                showDialog("Subject already exists!")
             } else {
                 saveSubject()
             }
@@ -138,7 +138,7 @@ class AddSubjectFragment(
             units = getUnits()
             timeslots = getTimeslots()
         } catch (e: Exception) {
-            showError(e.message!!)
+            showDialog(e.message!!)
             return false
         }
 
@@ -161,7 +161,7 @@ class AddSubjectFragment(
             }
             return true
         } catch (e: IllegalArgumentException) {
-            e.message?.let { showError(it) }
+            e.message?.let { showDialog(it) }
             return false
         }
     }
@@ -287,7 +287,7 @@ class AddSubjectFragment(
                 visibility = View.VISIBLE
                 setOnClickListener {
                     subjectStorage.recalculateSubject(subjectCode)
-                    showError("Subject recalculated")
+                    showDialog("Subject recalculated")
                 }
             }
         }

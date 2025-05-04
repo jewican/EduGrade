@@ -10,6 +10,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.gson.GsonBuilder
+import java.time.LocalDateTime
 
 class ScoreStorage {
     private var scores: MutableList<Score> = mutableListOf()
@@ -147,5 +149,38 @@ class ScoreStorage {
                 Log.e(TAG, "Database error: ${error.message}")
             }
         })
+    }
+
+    fun exportScoresToJson(
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            onFailure(Exception("User not authenticated"))
+            return
+        }
+
+        try {
+            val exportObject = mapOf(
+                "metadata" to mapOf(
+                    "exportDate" to LocalDateTime.now().toString(),
+                    "userId" to userId,
+                    "totalScores" to scores.size
+                ),
+                "scores" to scores.map { it.toMap() }
+            )
+
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val jsonString = gson.toJson(exportObject)
+
+            Log.d(TAG, "Successfully exported ${scores.size} scores to JSON")
+            onSuccess(jsonString)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error exporting scores to JSON: ${e.message}")
+            onFailure(e)
+        }
     }
 }

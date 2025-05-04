@@ -1,4 +1,4 @@
-package com.android.edugrade.data.auth
+package com.android.edugrade.data.user
 
 import android.util.Log
 import androidx.lifecycle.LiveData

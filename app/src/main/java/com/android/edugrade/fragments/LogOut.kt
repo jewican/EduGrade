@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.core.os.bundleOf
 import com.android.edugrade.R
-import com.android.edugrade.data.auth.UserRepository
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.LogoutDrawerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.Firebase
-import com.google.firebase.app
-import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -2,6 +2,13 @@ package com.android.edugrade.util
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentValues
+import android.content.Context
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -111,7 +118,7 @@ fun Map<String, Any>.toScore(): Score {
     )
 }
 
-fun Activity.showError(message: String, onDismiss: (() -> Unit)? = null) {
+fun Activity.showDialog(message: String, onDismiss: (() -> Unit)? = null) {
     AlertDialog.Builder(this).apply {
         setMessage(message)
             .setPositiveButton("Ok") { _, _ -> }
@@ -120,7 +127,7 @@ fun Activity.showError(message: String, onDismiss: (() -> Unit)? = null) {
     }.show()
 }
 
-fun Fragment.showError(message: String) {
+fun Fragment.showDialog(message: String) {
     AlertDialog.Builder(context).apply {
         setMessage(message)
             .setPositiveButton("Ok") { _, _ -> }
@@ -157,4 +164,31 @@ fun Fragment.setCurrentFragment(fragment: Fragment) {
 
 fun String.isValidEmail(): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(this).matches()
+}
+
+fun String.saveToFile(context: Context, filename: String = "scores_export.json"): Uri? {
+    return try {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/json")
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+            }
+        }
+
+        val resolver = context.contentResolver
+        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+
+        uri?.let {
+            resolver.openOutputStream(it)?.use { outputStream ->
+                outputStream.write(this.toByteArray())
+            }
+        }
+
+        uri
+    } catch (e: Exception) {
+        Log.e("StringSaveToFile", "Error saving JSON to file: ${e.message}")
+        null
+    }
 }

@@ -3,10 +3,10 @@ package com.android.edugrade.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.android.edugrade.data.auth.UserRepository
+import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.ActivityRegisterBinding
 import com.android.edugrade.util.isValidEmail
-import com.android.edugrade.util.showError
+import com.android.edugrade.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,27 +37,27 @@ class RegisterActivity : AppCompatActivity() {
             email.isBlank()     ||
             password1.isBlank() ||
             password2.isBlank()) {
-            showError("Please fill out all fields!")
+            showDialog("Please fill out all fields!")
             return
         }
 
         if (!email.isValidEmail()) {
-            showError("Email is not valid!")
+            showDialog("Email is not valid!")
             return
         }
 
         if (password1 != password2) {
-            showError("Passwords do not match!")
+            showDialog("Passwords do not match!")
             return
         }
 
         lifecycleScope.launch {
             if (auth.registerUser(username, email, password1)) {
-                showError("Registration successful!") {
+                showDialog("Registration successful!") {
                     finish()
                 }
             } else {
-                showError("Registration failed! Network may be unstable.")
+                showDialog("Registration failed! Network may be unstable.")
             }
         }
 
