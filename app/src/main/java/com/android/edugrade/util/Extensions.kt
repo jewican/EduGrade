@@ -94,6 +94,7 @@ fun Map<String, Any>.toAssessmentType(): AssessmentType {
 
 fun Score.toMap(): Map<String, Any> {
     return mapOf(
+        "id" to id,
         "code" to code,
         "assessmentTypeId" to assessmentTypeId,
         "name" to name,
@@ -109,6 +110,7 @@ fun Map<String, Any>.toScore(): Score {
     val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
 
     return Score(
+        id = this["id"] as String,
         code = this["code"] as String,
         assessmentTypeId = this["assessmentTypeId"] as String,
         name = this["name"] as String,

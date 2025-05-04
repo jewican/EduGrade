@@ -23,7 +23,8 @@ class ScoreStorage {
     fun addScore(
         score: Score,
         onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit) {
+        onFailure: (Exception) -> Unit
+    ) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             Log.wtf(TAG, "User is not authenticated!")
@@ -34,7 +35,7 @@ class ScoreStorage {
 
         val scoreRef = database.child("scores")
             .child(userId)
-            .push()
+            .child(score.id)
 
         scoreRef.setValue(score.toMap())
             .addOnSuccessListener {
@@ -56,32 +57,33 @@ class ScoreStorage {
 
         val scoresRef = database.child("scores").child(userId)
 
-        scoresRef.orderByChild("code").equalTo(subjectCode).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val scoresToDelete = snapshot.children.map { it.key }.toList()
+        scoresRef.orderByChild("code").equalTo(subjectCode)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val scoresToDelete = snapshot.children.map { it.key }.toList()
 
-                if (scoresToDelete.isNotEmpty()) {
-                    val deleteTasks = scoresToDelete.map { key ->
-                        scoresRef.child(key!!).removeValue()
-                    }
+                    if (scoresToDelete.isNotEmpty()) {
+                        val deleteTasks = scoresToDelete.map { key ->
+                            scoresRef.child(key!!).removeValue()
+                        }
 
-                    for (deleteTask in deleteTasks) {
-                        deleteTask.addOnSuccessListener {
-                            Log.d(TAG, "Score successfully deleted for subject: $subjectCode")
+                        for (deleteTask in deleteTasks) {
+                            deleteTask.addOnSuccessListener {
+                                Log.d(TAG, "Score successfully deleted for subject: $subjectCode")
+                            }
+                            deleteTask.addOnFailureListener { e ->
+                                Log.e(TAG, "Error deleting score: ${e.message}")
+                            }
                         }
-                        deleteTask.addOnFailureListener { e ->
-                            Log.e(TAG, "Error deleting score: ${e.message}")
-                        }
+                    } else {
+                        Log.d(TAG, "No scores found for subject code: $subjectCode")
                     }
-                } else {
-                    Log.d(TAG, "No scores found for subject code: $subjectCode")
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Error querying scores: ${error.message}")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Error querying scores: ${error.message}")
+                }
+            })
     }
 
     fun getAllScores(): List<Score> = scores
@@ -102,21 +104,25 @@ class ScoreStorage {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val scores = mutableListOf<Score>()
                     for (scoreSnapshot in snapshot.children) {
-                        val scoreMap = scoreSnapshot.value as Map<String, Any>
-                        val score = scoreMap.toScore()
-                        scores.add(score)
+                        try {
+                            val scoreMap = scoreSnapshot.value as Map<String, Any>
+                            val score = scoreMap.toScore()
+                            scores.add(score)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing score: ${e.message}")
+                        }
                     }
                     scores.reverse()
                     Log.w(TAG, "Scores of $code: $scores")
                     onResult(scores)
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     println("Error: ${error.message}")
                 }
             })
     }
 
-    // TODO: limit queries to recent scores only
     fun loadScores() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
