@@ -35,7 +35,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_test) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.exportSubjectsButton.setOnClickListener {
-            showDialog("Not yet implemented!")
+            subjectStorage.exportSubjectsToJson(
+                onSuccess = { jsonString ->
+                    val uri = jsonString.saveToFile(requireContext(), "subjects_export_${LocalDateTime.now()}.json")
+                    if (uri != null) {
+                        showDialog("Subjects exported to Documents successfully!")
+                    }
+                },
+                onFailure = { exception ->
+                    showDialog("Export failed: ${exception.message}")
+                }
+            )
         }
 
         binding.exportScoresButton.setOnClickListener {
@@ -43,7 +53,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_test) {
                 onSuccess = { jsonString ->
                     val uri = jsonString.saveToFile(requireContext(), "scores_export_${LocalDateTime.now()}.json")
                     if (uri != null) {
-                        showDialog("Scores exported successfully!")
+                        showDialog("Scores exported to Documents successfully!")
                     }
                 },
                 onFailure = { exception ->

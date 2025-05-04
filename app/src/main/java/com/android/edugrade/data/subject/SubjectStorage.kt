@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.gson.GsonBuilder
+import java.time.LocalDateTime
 
 class SubjectStorage(
     private val scoreStorage: ScoreStorage,
@@ -123,5 +125,39 @@ class SubjectStorage(
         })
     }
 
+    fun exportSubjectsToJson(
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            onFailure(Exception("User not authenticated"))
+            return
+        }
+
+        try {
+            val subjectsList = _subjects.value ?: emptyList()
+
+            val exportObject = mapOf(
+                "metadata" to mapOf(
+                    "exportDate" to LocalDateTime.now().toString(),
+                    "userId" to userId,
+                    "totalSubjects" to subjectsList.size
+                ),
+                "subjects" to subjectsList.map { it.toMap() }
+            )
+
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val jsonString = gson.toJson(exportObject)
+
+            Log.d(TAG, "Successfully exported ${subjectsList.size} subjects to JSON")
+            onSuccess(jsonString)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error exporting subjects to JSON: ${e.message}")
+            onFailure(e)
+        }
+    }
 
 }

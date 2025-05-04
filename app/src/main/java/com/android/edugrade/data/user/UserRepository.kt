@@ -58,10 +58,6 @@ class UserRepository(private val subjectStorage: Lazy<SubjectStorage>) {
         }
     }
 
-    /**
-     * Observes subjects once and calculates GPA.
-     * The observer is removed immediately after receiving the data.
-     */
     fun calculateGpa() {
         if (user == null) {
             Log.w(TAG, "User is not authenticated!")
