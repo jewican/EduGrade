@@ -1,18 +1,19 @@
 package com.android.edugrade.data.user
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.models.GpaSnapshot
+import com.android.edugrade.models.Score
 import com.android.edugrade.models.Subject
+import com.android.edugrade.util.toGpaSnapshot
 import com.android.edugrade.util.toMap
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.database
+import com.google.firebase.database.ValueEventListener
 import dagger.Lazy
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
@@ -73,6 +74,39 @@ class UserRepository @Inject constructor(
         }
     }
 
+    fun getGpaHistory(onResult: (List<GpaSnapshot>) -> Unit) {
+        if (user == null) {
+            Log.w(TAG, "User is not authenticated!")
+            return
+        }
+
+        usersRef
+            .child(user!!.uid)
+            .child("gpaSnapshots")
+            .orderByChild("dateAdded")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val gpaSnapshots = mutableListOf<GpaSnapshot>()
+                    for (scoreSnapshot in snapshot.children) {
+                        try {
+                            val gpaSnapshotMap = scoreSnapshot.value as Map<String, Any>
+                            val gpaSnapshot = gpaSnapshotMap.toGpaSnapshot()
+                            gpaSnapshots.add(gpaSnapshot)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing score: ${e.message}")
+                        }
+                    }
+                    gpaSnapshots.reverse()
+                    Log.w(TAG, "GPA snapshots retrieved: $gpaSnapshots")
+                    onResult(gpaSnapshots)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    println("Error retrieving GPA snapshots: ${error.message}")
+                }
+            })
+    }
+
     // only save a snapshot of gpa if a score was added
     fun calculateGpa(scoreId: String? = null) {
         if (user == null) {
@@ -102,24 +136,28 @@ class UserRepository @Inject constructor(
                 usersRef.child(user!!.uid).child("currentGpa").setValue(gpa)
 
                 if (scoreId != null) {
-                    val gpaHistoryRef = usersRef.child(user!!.uid).child("gpaSnapshots").push()
-                    val snapshot = GpaSnapshot(
-                        gpa = gpa,
-                        scoreId = scoreId,
-                        dateAdded = LocalDateTime.now()
-                    )
-                    gpaHistoryRef.setValue(snapshot.toMap())
-                        .addOnSuccessListener {
-                            Log.w(TAG, "Saved GPA snapshot successfully")
-                        }
-                        .addOnFailureListener {
-                            Log.w(TAG, "GPA snapshot saving error: ${it.message}")
-                        }
+                    saveGpaSnapshot(scoreId, gpa)
                 }
             }
         }
 
         subjectLiveData.observeForever(observer)
+    }
+
+    fun saveGpaSnapshot(scoreId: String, gpa: Double) {
+        val gpaHistoryRef = usersRef.child(user!!.uid).child("gpaSnapshots").push()
+        val snapshot = GpaSnapshot(
+            gpa = gpa,
+            scoreId = scoreId,
+            dateAdded = LocalDateTime.now()
+        )
+        gpaHistoryRef.setValue(snapshot.toMap())
+            .addOnSuccessListener {
+                Log.w(TAG, "Saved GPA snapshot successfully")
+            }
+            .addOnFailureListener {
+                Log.w(TAG, "GPA snapshot saving error: ${it.message}")
+            }
     }
 
     suspend fun registerUser(username: String, email: String, password: String): Boolean {
