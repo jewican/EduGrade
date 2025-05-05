@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.android.edugrade.R
+import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.FragmentPerformanceBinding
-import com.android.edugrade.util.LineChartHelper
-import com.android.edugrade.util.showDialog
+import com.android.edugrade.util.ChartHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class PerformanceFragment : Fragment() {
     private lateinit var binding: FragmentPerformanceBinding
+    @Inject
+    lateinit var subjectStorage: SubjectStorage
     @Inject
     lateinit var userRepository: UserRepository
 
@@ -32,7 +33,11 @@ class PerformanceFragment : Fragment() {
 
         val gpaLineChart = binding.gpaLineChart
         userRepository.getGpaHistory { gpaHistory ->
-            LineChartHelper.setupChart(gpaLineChart, gpaHistory)
+            ChartHelper.setupGpaLineChart(gpaLineChart, gpaHistory)
         }
+
+        val subjectBarChart = binding.subjectBarChart
+        ChartHelper.setupSubjectGradesBarChart(subjectBarChart, subjectStorage.subjects.value!!)
+
     }
 }

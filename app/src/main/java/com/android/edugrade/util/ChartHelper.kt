@@ -2,8 +2,13 @@ package com.android.edugrade.util
 
 import android.graphics.Color
 import com.android.edugrade.models.GpaSnapshot
+import com.android.edugrade.models.Subject
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -11,9 +16,9 @@ import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.time.format.DateTimeFormatter
 
-object LineChartHelper {
+object ChartHelper {
 
-    fun setupChart(
+    fun setupGpaLineChart(
         chart: LineChart,
         snapshots: List<GpaSnapshot>,
         chartLabel: String = "GPA Over Time",
@@ -72,6 +77,57 @@ object LineChartHelper {
             legend.isEnabled = false
 
             setExtraOffsets(10f, 10f, 10f, 30f)
+
+            invalidate()
+        }
+    }
+
+    fun setupSubjectGradesBarChart(
+        chart: BarChart,
+        subjects: List<Subject>,
+        chartLabel: String = "Subject Grades"
+    ) {
+        if (subjects.isEmpty()) return
+
+        val filteredSubjects = subjects.filter { it.units > 0 }
+
+        val entries = filteredSubjects.mapIndexed { index, subject ->
+            val weightedGrade = (subject.overallGrade / 100 * 5) * subject.units
+            BarEntry(index.toFloat(), weightedGrade.toFloat())
+        }
+
+        val xLabels = filteredSubjects.map { it.code }
+
+        val dataSet = BarDataSet(entries, chartLabel).apply {
+            color = Color.rgb(33, 150, 243)
+            valueTextColor = Color.BLACK
+            valueTextSize = 12f
+            setDrawValues(true)
+        }
+
+        dataSet.valueFormatter =
+            IValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
+                String.format("%.2f", entry?.y)
+            }
+
+        chart.apply {
+            data = BarData(dataSet)
+            description.isEnabled = false
+            animateY(600)
+            setExtraOffsets(10f, 10f, 10f, 30f)
+
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(xLabels)
+                position = XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                isGranularityEnabled = true
+                textColor = Color.DKGRAY
+                labelRotationAngle = -30f
+            }
+
+            axisLeft.axisMinimum = 0f
+            axisRight.isEnabled = false
+            legend.isEnabled = false
 
             invalidate()
         }

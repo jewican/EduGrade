@@ -12,7 +12,7 @@ import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
 import com.android.edugrade.data.subject.SubjectStorage
-import com.android.edugrade.util.LineChartHelper
+import com.android.edugrade.util.ChartHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +47,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         userRepository.getGpaHistory { gpaHistory ->
-            LineChartHelper.setupChart(binding.gpaLineChart, gpaHistory)
+            ChartHelper.setupGpaLineChart(binding.gpaLineChart, gpaHistory)
         }
 
         lifecycleScope.launch {
