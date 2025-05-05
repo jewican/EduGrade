@@ -41,6 +41,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.toggleButton.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (checkedId == R.id.custom && isChecked) {
+                binding.customInputLayout.visibility = View.VISIBLE
+            } else {
+                binding.customInputLayout.visibility = View.GONE
+            }
+        }
+
         binding.exportSubjectsButton.setOnClickListener {
             subjectStorage.exportSubjectsToJson(
                 onSuccess = { jsonString ->
