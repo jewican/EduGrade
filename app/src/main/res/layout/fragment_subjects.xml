@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SubjectsFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="24dp"
@@ -36,7 +36,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addSubjectButton"
