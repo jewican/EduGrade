@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val settingsNotif = findViewById<Button>(R.id.userProfile)
         val homeFragment = HomeFragment()
         val scoresFragment = ScoresFragment()
         val subjectsFragment = SubjectsFragment()
@@ -54,10 +53,6 @@ class MainActivity : AppCompatActivity() {
         val profileFragment = ProfileFragment()
 
         setCurrentFragment(homeFragment)
-
-        settingsNotif.setOnClickListener {
-            startActivity(Intent(this, NotificationsActivity::class.java))
-        }
 
         bottomNavigationView.setOnItemSelectedListener {
             while (supportFragmentManager.backStackEntryCount > 0) {

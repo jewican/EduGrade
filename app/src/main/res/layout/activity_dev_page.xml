@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            android:backgroundTint="@color/md_theme_background_highContrast">
+            android:background="?attr/colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,7 +79,8 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            android:backgroundTint="@color/md_theme_background_highContrast">
+            android:background="?attr/colorSurface"
+            >
 
 
             <LinearLayout
@@ -124,12 +125,11 @@
         </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/homePage"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Page"
+            android:text="Back to Application"
             android:layout_gravity="center"
-            android:background="@drawable/buttons"
             android:layout_marginTop="20dp"
             />
 

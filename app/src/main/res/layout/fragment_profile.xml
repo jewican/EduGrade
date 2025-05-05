@@ -179,20 +179,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
-            <Button
-                android:id="@+id/exportSubjectsButton"
-                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="EXPORT SUBJECTS TO JSON"/>
+                android:text="EXPORT DATA TO JSON"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
 
-            <Button
-                android:id="@+id/exportScoresButton"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
-                android:text="EXPORT SCORES TO JSON"/>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+
+               <Button
+                   android:id="@+id/exportSubjectsButton"
+                   style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:text="EXPORT SUBJECTS"/>
+
+               <Button
+                   android:id="@+id/exportScoresButton"
+                   style="@style/Widget.Material3.Button.TonalButton"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:text="EXPORT SCORES"/>
+
+           </LinearLayout>
 
             <Button
                 android:id="@+id/btn_aboutUs"
@@ -200,8 +215,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="About us"
-                app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+                android:layout_marginTop="8dp"
+                android:text="ABOUT US"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -210,7 +225,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Log out"
+                android:text="LOG OUT"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
