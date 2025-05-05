@@ -48,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
             auth.loginUser(email, password,
                 onSuccess = {
                     startActivity(Intent(context, MainActivity::class.java))
+                    finish()
                 },
                 onFailure = {
                     showDialog("Error logging in: ${it.message}")

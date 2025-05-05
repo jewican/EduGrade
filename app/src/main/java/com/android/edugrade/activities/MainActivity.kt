@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val settingsNotif = findViewById<Button>(R.id.btnNotif)
+        val settingsNotif = findViewById<Button>(R.id.userProfile)
         val homeFragment = HomeFragment()
         val scoresFragment = ScoresFragment()
         val subjectsFragment = SubjectsFragment()
@@ -73,13 +73,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        supportFragmentManager.setFragmentResultListener("logout_request", this) { _, bundle ->
-            val confirmed = bundle.getBoolean("confirmed")
-            if (confirmed) {
-                finish()
-            }
-        }
-
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount != 0) {
@@ -93,5 +86,12 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         })
+
+        supportFragmentManager.setFragmentResultListener("logout_request", this) { _, bundle ->
+            val confirmed = bundle.getBoolean("confirmed")
+            if (confirmed) {
+                finish()
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log Out"
+        android:text="Exit Application"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textAlignment="center"/>
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
-        android:text="Are you sure you want to log out?"
+        android:text="Are you sure you want to exit EduGrade?"
         android:textSize="16sp"
         android:textAlignment="center"/>
 
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="LOG OUT"
+        android:text="EXIT"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -37,7 +37,7 @@
         style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:text="CANCEL"
         android:textSize="16sp"
         android:textStyle="bold"/>

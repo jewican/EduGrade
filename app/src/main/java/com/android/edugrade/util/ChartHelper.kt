@@ -83,7 +83,7 @@ object ChartHelper {
                 textColor = onSurfaceColor
             }
 
-            axisLeft.axisMinimum = 0f
+            axisLeft.axisMinimum = 2f
             axisLeft.axisMaximum = 5f
             axisLeft.textColor = onSurfaceColor
             axisRight.isEnabled = false
@@ -132,7 +132,7 @@ object ChartHelper {
                 labelRotationAngle = -30f
             }
 
-            axisLeft.axisMinimum = 0f
+            axisLeft.axisMinimum = 2f
             axisRight.isEnabled = false
             legend.isEnabled = false
 

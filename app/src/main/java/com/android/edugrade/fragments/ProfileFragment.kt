@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.android.edugrade.R
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
-import com.android.edugrade.databinding.FragmentProfileTestBinding
+import com.android.edugrade.databinding.FragmentProfileBinding
 import com.android.edugrade.util.saveToFile
 import com.android.edugrade.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,8 +16,8 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(R.layout.fragment_profile_test) {
-    private lateinit var binding: FragmentProfileTestBinding
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
+    private lateinit var binding: FragmentProfileBinding
     @Inject
     lateinit var subjectStorage: SubjectStorage
     @Inject
@@ -27,7 +27,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_test) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileTestBinding.inflate(layoutInflater, container, false)
+        binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
