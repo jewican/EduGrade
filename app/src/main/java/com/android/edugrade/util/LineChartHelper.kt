@@ -9,7 +9,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.utils.ViewPortHandler
 import java.time.format.DateTimeFormatter
 
 object LineChartHelper {
@@ -21,7 +20,13 @@ object LineChartHelper {
     ) {
         if (snapshots.isEmpty()) return
 
-        val sorted = snapshots.sortedBy { it.dateAdded }
+        // this part makes sure that only the latest is shown in days with multiple snapshots
+        val sorted = snapshots
+            .groupBy { it.dateAdded.toLocalDate() }
+            .mapValues { it.value.maxByOrNull { snap -> snap.dateAdded }!! }
+            .toSortedMap()
+            .values
+            .toList()
 
         val entries = sorted.mapIndexed { index, snapshot ->
             val yValue = snapshot.gpa / 100 * 5
