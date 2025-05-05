@@ -132,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.4"
+                    android:tag="4.4"
                     />
                 <Button
                     style="?attr/materialButtonOutlinedStyle"
@@ -139,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.6"
+                    android:tag="4.6"
                     />
                 <Button
                     style="?attr/materialButtonOutlinedStyle"
@@ -146,6 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.8"
+                    android:tag="4.8"
                     />
                 <Button
                     style="?attr/materialButtonOutlinedStyle"
@@ -156,18 +159,41 @@
                     />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:id="@+id/customInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter custom value"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:visibility="gone">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/customTargetGpaInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter custom value">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/customTargetGpaInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </FrameLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveCustomGpa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="Save" />
+            </LinearLayout>
 
 
             <TextView

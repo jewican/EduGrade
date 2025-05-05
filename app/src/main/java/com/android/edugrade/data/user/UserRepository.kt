@@ -30,6 +30,10 @@ class UserRepository @Inject constructor(
 
     fun currentUser() = user
 
+    fun getEmail(): String {
+        return user?.email ?: ""
+    }
+
     suspend fun getUsername(): String {
         if (currentUser() == null) {
             Log.w(TAG, "User is not authenticated!")
@@ -82,6 +86,22 @@ class UserRepository @Inject constructor(
             Log.w(TAG, "Error getting target GPA! ${e.message}")
             0.0
         }
+    }
+
+    fun setTargetGpa(targetGpa: Double) {
+        if (user == null) {
+            Log.w(TAG, "User is not authenticated!")
+            return
+        }
+
+        usersRef.child(user!!.uid).child("targetGpa")
+            .setValue(targetGpa)
+            .addOnSuccessListener {
+                Log.e(TAG, "Set user's target GPA to $targetGpa")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Error setting user's target GPA: ${it.message}")
+            }
     }
 
     fun getGpaHistory(onResult: (List<GpaSnapshot>) -> Unit) {

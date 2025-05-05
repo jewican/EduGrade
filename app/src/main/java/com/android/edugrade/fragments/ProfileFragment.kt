@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.android.edugrade.R
 import com.android.edugrade.activities.DevPageActivity
 import com.android.edugrade.activities.LoginActivity
@@ -17,6 +19,7 @@ import com.android.edugrade.databinding.FragmentProfileBinding
 import com.android.edugrade.util.saveToFile
 import com.android.edugrade.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -41,12 +44,31 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toggleButton.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            if (checkedId == R.id.custom && isChecked) {
-                binding.customInputLayout.visibility = View.VISIBLE
-            } else {
-                binding.customInputLayout.visibility = View.GONE
+        lifecycleScope.launch {
+            binding.etEmail.setText(userRepository.getEmail())
+            binding.etUsername.setText(userRepository.getUsername())
+            applyTargetGpa(userRepository.getTargetGpa())
+        }
+
+        binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+
+            val selectedButton = binding.toggleButton.findViewById<Button>(checkedId)
+            when (checkedId) {
+                R.id.custom -> {
+                    binding.customInputLayout.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.customInputLayout.visibility = View.GONE
+                    val selectedGpa = selectedButton.tag.toString().toDouble()
+                    userRepository.setTargetGpa(selectedGpa)
+                }
             }
+        }
+
+        binding.btnSaveCustomGpa.setOnClickListener {
+            val customGpa = binding.customTargetGpaInput.text.toString().toDouble()
+            userRepository.setTargetGpa(customGpa)
         }
 
         binding.exportSubjectsButton.setOnClickListener {
@@ -101,5 +123,27 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
         dialog.show()
+    }
+
+    fun applyTargetGpa(targetGpa: Double) {
+        val toggleGroup = binding.toggleButton
+        var matched = false
+
+        for (i in 0 until toggleGroup.childCount) {
+            val button = toggleGroup.getChildAt(i) as? Button
+            val tagValue = button?.tag?.toString()?.toDoubleOrNull()
+
+            if (tagValue != null && tagValue == targetGpa) {
+                toggleGroup.check(button.id)
+                matched = true
+                break
+            }
+        }
+
+        if (!matched) {
+            toggleGroup.check(R.id.custom)
+            binding.customInputLayout.visibility = View.VISIBLE
+            binding.customTargetGpaInput.setText(targetGpa.toString())
+        }
     }
 }
