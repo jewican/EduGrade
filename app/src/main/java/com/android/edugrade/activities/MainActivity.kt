@@ -1,6 +1,8 @@
 package com.android.edugrade.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.android.edugrade.R
@@ -14,9 +16,6 @@ import com.android.edugrade.fragments.ScoresFragment
 import com.android.edugrade.fragments.SubjectsFragment
 import com.android.edugrade.util.setCurrentFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
+        val settingsNotif = findViewById<Button>(R.id.btnNotif)
         val homeFragment = HomeFragment()
         val scoresFragment = ScoresFragment()
         val subjectsFragment = SubjectsFragment()
@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         val profileFragment = ProfileFragment()
 
         setCurrentFragment(homeFragment)
+
+        settingsNotif.setOnClickListener {
+            startActivity(Intent(this, NotificationsActivity::class.java))
+        }
 
         bottomNavigationView.setOnItemSelectedListener {
             while (supportFragmentManager.backStackEntryCount > 0) {
