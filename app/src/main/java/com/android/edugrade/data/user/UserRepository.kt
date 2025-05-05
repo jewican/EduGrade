@@ -30,6 +30,16 @@ class UserRepository @Inject constructor(
 
     fun currentUser() = user
 
+    suspend fun getUsername(): String {
+        if (currentUser() == null) {
+            Log.w(TAG, "User is not authenticated!")
+            return ""
+        }
+
+        return usersRef.child(currentUser()!!.uid).child("name")
+            .get().await().value.toString()
+    }
+
     suspend fun getCurrentGpa(): Double {
         if (user == null) {
             Log.w(TAG, "User is not authenticated!")

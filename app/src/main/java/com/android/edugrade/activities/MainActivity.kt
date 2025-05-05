@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.android.edugrade.R
 import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
+import com.android.edugrade.data.user.UserRepository
+import com.android.edugrade.databinding.ActivityMainBinding
 import com.android.edugrade.fragments.HomeFragment
 import com.android.edugrade.fragments.LogOut
 import com.android.edugrade.fragments.PerformanceFragment
@@ -17,21 +20,29 @@ import com.android.edugrade.fragments.SubjectsFragment
 import com.android.edugrade.util.setCurrentFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     @Inject
     lateinit var subjectStorage: SubjectStorage
     @Inject
     lateinit var scoreStorage: ScoreStorage
+    @Inject
+    lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        subjectStorage.loadSubjects()
-        scoreStorage.loadScores()
+        lifecycleScope.launch {
+            binding.tvUsername.text = userRepository.getUsername()
+            subjectStorage.loadSubjects()
+            scoreStorage.loadScores()
+        }
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
