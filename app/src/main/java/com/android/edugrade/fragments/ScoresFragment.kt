@@ -12,6 +12,7 @@ import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.databinding.FragmentScoresBinding
 import com.android.edugrade.util.ScoreCardAdapter
 import com.android.edugrade.util.setCurrentFragment
+import com.android.edugrade.util.showScoreDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ class ScoresFragment : Fragment(R.layout.fragment_scores) {
             adapter = ScoreCardAdapter(
                 scoresList = scores,
                 onClick = {
-                    Toast.makeText(context, "To be implemented!", Toast.LENGTH_SHORT).show()
+                    showScoreDialog(scores[it])
                 }
             )
         }

@@ -11,7 +11,7 @@ import com.android.edugrade.models.Score
 
 class ScoreCardAdapter(
     private val scoresList: List<Score>,
-    private val onClick: () -> Unit
+    private val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ScoreCardAdapter.ScoreCardHolder>() {
     private val df = DecimalFormat("#.##")
 
@@ -33,6 +33,6 @@ class ScoreCardAdapter(
         holder.binding.scoreSubjectCode.text = scoresList[position].code
         holder.binding.userScore.text = df.format(scoresList[position].userScore)
         holder.binding.totalScore.text = df.format(scoresList[position].totalScore)
-        holder.binding.root.setOnClickListener { onClick() }
+        holder.binding.root.setOnClickListener { onClick(position) }
     }
 }

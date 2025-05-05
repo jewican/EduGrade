@@ -13,6 +13,7 @@ import android.util.Patterns
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.android.edugrade.R
+import com.android.edugrade.databinding.ScoreDetailsDialogBinding
 import com.android.edugrade.models.AssessmentType
 import com.android.edugrade.models.GpaSnapshot
 import com.android.edugrade.models.Score
@@ -21,6 +22,8 @@ import com.android.edugrade.models.Timeslot
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 // Firebase adapters
 fun Subject.toMap(): Map<String, Any> {
@@ -140,21 +143,45 @@ fun Map<String, Any>.toGpaSnapshot(): GpaSnapshot {
 }
 
 fun Activity.showDialog(message: String, onDismiss: (() -> Unit)? = null) {
-    AlertDialog.Builder(this).apply {
-        setMessage(message)
-            .setPositiveButton("Ok") { _, _ -> }
-            .setOnDismissListener { onDismiss?.invoke() }
-        create()
-    }.show()
+    val dialog = AlertDialog.Builder(this)
+        .setMessage(message)
+        .setPositiveButton("Ok") { _, _ -> }
+        .setOnDismissListener { onDismiss?.invoke() }
+        .create()
+
+    dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
+    dialog.show()
 }
 
 fun Fragment.showDialog(message: String) {
-    AlertDialog.Builder(context).apply {
-        setMessage(message)
-            .setPositiveButton("Ok") { _, _ -> }
-        create()
-    }.show()
+    val dialog = AlertDialog.Builder(requireContext())
+        .setMessage(message)
+        .setPositiveButton("Ok") { _, _ -> }
+        .create()
+
+    dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
+    dialog.show()
 }
+
+
+fun Fragment.showScoreDialog(score: Score) {
+    val binding = ScoreDetailsDialogBinding.inflate(layoutInflater).apply {
+        tvName.text = score.name
+        tvCode.text = score.code
+        tvUserScore.text = score.userScore.toString()
+        tvTotalScore.text = score.totalScore.toString()
+        tvDateAdded.text = score.dateAdded.format()
+    }
+
+    val dialog = AlertDialog.Builder(requireContext())
+        .setView(binding.root)
+        .create()
+
+    dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
+
+    dialog.show()
+}
+
 
 fun FragmentActivity.setCurrentFragment(fragment: Fragment) {
     supportFragmentManager.beginTransaction().apply {
@@ -212,4 +239,9 @@ fun String.saveToFile(context: Context, filename: String = "scores_export.json")
         Log.e("StringSaveToFile", "Error saving JSON to file: ${e.message}")
         null
     }
+}
+
+fun LocalDateTime.format(): String {
+    val formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy | h:mm a", Locale.getDefault())
+    return this.format(formatter)
 }

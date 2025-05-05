@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.edugrade.data.user.UserRepository
@@ -78,7 +79,11 @@ class AddSubjectFragment(
         }
 
         if (subjectCode != null) {
+            postponeEnterTransition()
             editSubjectMode()
+            view.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
             return
         }
 
