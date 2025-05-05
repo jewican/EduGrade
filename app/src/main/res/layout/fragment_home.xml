@@ -41,11 +41,10 @@
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                <!--TODO: Temporary; Will be replaced by chart-->
-                <ImageView
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/gpaLineChart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/bar_chart"/>
+                    android:layout_height="200dp"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

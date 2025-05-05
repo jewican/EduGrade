@@ -33,6 +33,6 @@ class ScoreCardAdapter(
         holder.binding.scoreSubjectCode.text = scoresList[position].code
         holder.binding.userScore.text = df.format(scoresList[position].userScore)
         holder.binding.totalScore.text = df.format(scoresList[position].totalScore)
-        holder.binding.root.setOnClickListener { onClick }
+        holder.binding.root.setOnClickListener { onClick() }
     }
 }
