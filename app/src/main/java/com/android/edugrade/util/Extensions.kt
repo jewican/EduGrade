@@ -127,6 +127,7 @@ fun Map<String, Any>.toScore(): Score {
 fun GpaSnapshot.toMap(): Map<String, Any> {
     return mapOf(
         "gpa" to gpa,
+        "subjectCode" to subjectCode,
         "scoreId" to scoreId,
         "dateAdded" to dateAdded.toString()
     )
@@ -137,6 +138,7 @@ fun Map<String, Any>.toGpaSnapshot(): GpaSnapshot {
 
     return GpaSnapshot(
         gpa = this["gpa"] as Double,
+        subjectCode = this["subjectCode"] as String,
         scoreId = this["scoreId"] as String,
         dateAdded = dateAdded
     )
@@ -162,26 +164,6 @@ fun Fragment.showDialog(message: String) {
     dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
     dialog.show()
 }
-
-
-fun Fragment.showScoreDialog(score: Score) {
-    val binding = ScoreDetailsDialogBinding.inflate(layoutInflater).apply {
-        tvName.text = score.name
-        tvCode.text = score.code
-        tvUserScore.text = score.userScore.toString()
-        tvTotalScore.text = score.totalScore.toString()
-        tvDateAdded.text = score.dateAdded.format()
-    }
-
-    val dialog = AlertDialog.Builder(requireContext())
-        .setView(binding.root)
-        .create()
-
-    dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_surface)
-
-    dialog.show()
-}
-
 
 fun FragmentActivity.setCurrentFragment(fragment: Fragment) {
     supportFragmentManager.beginTransaction().apply {

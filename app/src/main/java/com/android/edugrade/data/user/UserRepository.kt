@@ -2,6 +2,7 @@ package com.android.edugrade.data.user
 
 import android.util.Log
 import androidx.lifecycle.Observer
+import com.android.edugrade.data.score.ScoreStorage
 import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.models.GpaSnapshot
 import com.android.edugrade.models.Score
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import dagger.Lazy
 import kotlinx.coroutines.tasks.await
@@ -138,7 +140,7 @@ class UserRepository @Inject constructor(
     }
 
     // only save a snapshot of gpa if a score was added
-    fun calculateGpa(scoreId: String? = null) {
+    fun calculateGpa(subjectCode: String? = null, scoreId: String? = null) {
         if (user == null) {
             Log.w(TAG, "User is not authenticated!")
             return
@@ -165,8 +167,8 @@ class UserRepository @Inject constructor(
 
                 usersRef.child(user!!.uid).child("currentGpa").setValue(gpa)
 
-                if (scoreId != null) {
-                    saveGpaSnapshot(scoreId, gpa)
+                if (scoreId != null && subjectCode != null) {
+                    saveGpaSnapshot(subjectCode, scoreId, gpa)
                 }
             }
         }
@@ -174,10 +176,11 @@ class UserRepository @Inject constructor(
         subjectLiveData.observeForever(observer)
     }
 
-    fun saveGpaSnapshot(scoreId: String, gpa: Double) {
+    fun saveGpaSnapshot(subjectCode: String, scoreId: String, gpa: Double) {
         val gpaHistoryRef = usersRef.child(user!!.uid).child("gpaSnapshots").push()
         val snapshot = GpaSnapshot(
             gpa = gpa,
+            subjectCode = subjectCode,
             scoreId = scoreId,
             dateAdded = LocalDateTime.now()
         )
@@ -188,6 +191,65 @@ class UserRepository @Inject constructor(
             .addOnFailureListener {
                 Log.w(TAG, "GPA snapshot saving error: ${it.message}")
             }
+    }
+
+    fun deleteSnapshotsAfterScore(scoreId: String) {
+        if (user == null) {
+            Log.w(TAG, "User is not authenticated!")
+            return
+        }
+
+        // finding score
+        usersRef.child(user!!.uid).child("gpaSnapshots")
+            .orderByChild("scoreId")
+            .equalTo(scoreId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.exists()) {
+                        Log.w(TAG, "No snapshot found for score $scoreId")
+                        return
+                    }
+
+                    // get timestamp of given score
+                    val targetSnapshot = snapshot.children.first()
+                    val snapshotMap = targetSnapshot.getValue(object : GenericTypeIndicator<Map<String, Any>>() {})
+                    val dateAdded = snapshotMap?.get("dateAdded") as? String
+
+                    if (dateAdded == null) {
+                        Log.w(TAG, "Snapshot doesn't have a valid dateAdded field")
+                        return
+                    }
+
+                    // delete snapshots after timestamp
+                    usersRef.child(user!!.uid).child("gpaSnapshots")
+                        .orderByChild("dateAdded")
+                        .startAt(dateAdded)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(laterSnapshots: DataSnapshot) {
+                                for (snapshotToDelete in laterSnapshots.children) {
+                                    snapshotToDelete.ref.removeValue()
+                                        .addOnSuccessListener {
+                                            Log.w(TAG, "Deleted snapshot ${snapshotToDelete.key}")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w(TAG, "Failed to delete snapshot: ${e.message}")
+                                        }
+                                }
+                                Log.w(TAG, "Deleted all snapshots after score $scoreId")
+
+                                calculateGpa()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.w(TAG, "Error finding snapshots to delete: ${error.message}")
+                            }
+                        })
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w(TAG, "Error finding target snapshot: ${error.message}")
+                }
+            })
     }
 
     suspend fun registerUser(username: String, email: String, password: String): Boolean {

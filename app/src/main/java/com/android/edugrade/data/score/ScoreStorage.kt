@@ -1,24 +1,24 @@
 package com.android.edugrade.data.score
 
 import android.util.Log
+import com.android.edugrade.data.subject.SubjectStorage
 import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.models.Score
 import com.android.edugrade.util.toMap
 import com.android.edugrade.util.toScore
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
 import com.google.gson.GsonBuilder
+import dagger.Lazy
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class ScoreStorage @Inject constructor(
     private val userRepository: UserRepository,
+    private val subjectStorage: Lazy<SubjectStorage>,
     private val auth: FirebaseAuth,
     private val database: DatabaseReference
 ) {
@@ -38,25 +38,68 @@ class ScoreStorage @Inject constructor(
 
         Log.wtf(TAG, "Attempting to save ${score.name}...")
 
-        val scoreRef = database.child("scores")
+        val scoreRef = database.child("scores") // check if score exists (updating)
             .child(userId)
             .child(score.id)
 
-        scoreRef.setValue(score.toMap())
-            .addOnSuccessListener {
-                userRepository.calculateGpa(score.id)
-                Log.e(TAG, "Score saved successfully")
-                onSuccess()
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Score saving error! ${e.message}")
-                onFailure(e)
-            }
+        scoreRef.get().addOnSuccessListener { dataSnapshot ->
+            val isUpdate = dataSnapshot.exists()
+
+            scoreRef.setValue(score.toMap())
+                .addOnSuccessListener {
+                    if (isUpdate) {
+                        userRepository.deleteSnapshotsAfterScore(score.id) // delete snapshots if updating a score
+                        userRepository.calculateGpa()
+                        Log.e(TAG, "Score updated and subsequent GPA snapshots deleted")
+                    } else {
+                        userRepository.calculateGpa(score.code, score.id)
+                        Log.e(TAG, "New score saved with GPA snapshot")
+                    }
+                    onSuccess()
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Score saving error! ${e.message}")
+                    onFailure(e)
+                }
+        }.addOnFailureListener { e ->
+            Log.e(TAG, "Error checking if score exists: ${e.message}")
+            onFailure(e)
+        }
     }
 
     fun getScore(scoreId: String): Score? {
         return scores.find { it.id == scoreId }
     }
+
+    fun deleteScore(
+        scoreId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception) -> Unit = {}
+    ) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Log.e(TAG, "User is not authenticated!")
+            onFailure(Exception("User not authenticated"))
+            return
+        }
+
+        val scoreRef = database.child("scores").child(userId).child(scoreId)
+
+        scoreRef.removeValue()
+            .addOnSuccessListener {
+                val deletedScore = getScore(scoreId)
+                scores.removeAll { it.id == scoreId }
+                subjectStorage.get().recalculateSubject(deletedScore!!.code)
+                userRepository.deleteSnapshotsAfterScore(scoreId)
+                Log.d(TAG, "Score $scoreId successfully deleted.")
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to delete score $scoreId: ${e.message}")
+                onFailure(e)
+            }
+    }
+
 
     fun getAllScores(): List<Score> = scores
 

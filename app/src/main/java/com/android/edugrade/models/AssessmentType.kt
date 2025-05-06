@@ -21,7 +21,8 @@ data class AssessmentType(
         val activities = activityMap[id]
 
         if (activities == null) {
-            Log.w("GradeCalculation", "No activities found for [$name] | Using default grade: $grade")
+            Log.w("GradeCalculation", "No activities found for [$name] | Using default grade 100")
+            grade = 100.0
             return grade
         }
 

@@ -41,10 +41,11 @@ object AppModule {
     @Singleton
     fun provideScoreStorage(
         userRepository: UserRepository,
+        subjectStorage: Lazy<SubjectStorage>,
         auth: FirebaseAuth,
         database: DatabaseReference
     ): ScoreStorage {
-        return ScoreStorage(userRepository, auth, database)
+        return ScoreStorage(userRepository, subjectStorage, auth, database)
     }
 
     @Provides
