@@ -109,8 +109,20 @@ fun Score.toMap(): Map<String, Any> {
 }
 
 fun Map<String, Any>.toScore(): Score {
-    val userScore = (this["userScore"] as Long).toDouble()
-    val totalScore = (this["totalScore"] as Long).toDouble()
+    val userScore = when (val value = this["userScore"]) {
+        is Double -> value
+        is Long -> value.toDouble()
+        is Int -> value.toDouble()
+        else -> 0.0
+    }
+
+    val totalScore = when (val value = this["totalScore"]) {
+        is Double -> value
+        is Long -> value.toDouble()
+        is Int -> value.toDouble()
+        else -> 0.0
+    }
+
     val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
 
     return Score(
@@ -124,6 +136,7 @@ fun Map<String, Any>.toScore(): Score {
     )
 }
 
+
 fun GpaSnapshot.toMap(): Map<String, Any> {
     return mapOf(
         "gpa" to gpa,
@@ -136,13 +149,21 @@ fun GpaSnapshot.toMap(): Map<String, Any> {
 fun Map<String, Any>.toGpaSnapshot(): GpaSnapshot {
     val dateAdded = LocalDateTime.parse(this["dateAdded"] as String)
 
+    val gpaValue = when (val gpaRaw = this["gpa"]) {
+        is Double -> gpaRaw
+        is Long -> gpaRaw.toDouble()
+        is Int -> gpaRaw.toDouble()
+        else -> throw IllegalArgumentException("Invalid GPA type: $gpaRaw")
+    }
+
     return GpaSnapshot(
-        gpa = this["gpa"] as Double,
+        gpa = gpaValue,
         subjectCode = this["subjectCode"] as String,
         scoreId = this["scoreId"] as String,
         dateAdded = dateAdded
     )
 }
+
 
 fun Activity.showDialog(message: String, onDismiss: (() -> Unit)? = null) {
     val dialog = AlertDialog.Builder(this)

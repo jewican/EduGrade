@@ -84,11 +84,15 @@ class ScoreStorage @Inject constructor(
         }
 
         val scoreRef = database.child("scores").child(userId).child(scoreId)
+        val deletedScore = getScore(scoreId)
+        if (deletedScore == null) {
+            Log.w(TAG, "Score with ID $scoreId not found!")
+        } else {
+            scores.removeAll { it.id == scoreId }
+        }
 
         scoreRef.removeValue()
             .addOnSuccessListener {
-                val deletedScore = getScore(scoreId)
-                scores.removeAll { it.id == scoreId }
                 subjectStorage.get().recalculateSubject(deletedScore!!.code)
                 userRepository.deleteSnapshotsAfterScore(scoreId)
                 Log.d(TAG, "Score $scoreId successfully deleted.")

@@ -46,7 +46,7 @@ class UserRepository @Inject constructor(
             .get().await().value.toString()
     }
 
-    suspend fun getCurrentGpa(): Double {
+    suspend fun getCurrentGpa(scaleTo5Point: Boolean = true): Double {
         if (user == null) {
             Log.w(TAG, "User is not authenticated!")
             return 0.0
@@ -60,16 +60,18 @@ class UserRepository @Inject constructor(
                 else -> 0.0
             }
 
-            val fivePointGpa = rawGpa / 100 * 5
-            Log.w(TAG, "User's current GPA (raw): $rawGpa")
-            Log.w(TAG, "User's current GPA (5-point): $fivePointGpa")
+            val finalGpa = if (scaleTo5Point) rawGpa / 100 * 5 else rawGpa
 
-            fivePointGpa
+            Log.w(TAG, "User's current GPA (raw): $rawGpa")
+            Log.w(TAG, "User's current GPA (final): $finalGpa")
+
+            finalGpa
         } catch (e: Exception) {
             Log.w(TAG, "Error getting current GPA! ${e.message}")
             0.0
         }
     }
+
 
     suspend fun getTargetGpa(): Double {
         if (user == null) {
@@ -166,10 +168,14 @@ class UserRepository @Inject constructor(
                 Log.w(TAG, "As 5-point GPA: $finalGpa")
 
                 usersRef.child(user!!.uid).child("currentGpa").setValue(gpa)
-
-                if (scoreId != null && subjectCode != null) {
-                    saveGpaSnapshot(subjectCode, scoreId, gpa)
-                }
+                    .addOnSuccessListener {
+                        if (scoreId != null && subjectCode != null) {
+                            saveGpaSnapshot(subjectCode, scoreId, gpa)
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.w(TAG, "Failed to update currentGpa: ${it.message}")
+                    }
             }
         }
 

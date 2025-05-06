@@ -3,6 +3,7 @@ package com.android.edugrade.util
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.android.edugrade.R
 import com.android.edugrade.models.GpaSnapshot
@@ -49,6 +50,8 @@ object ChartHelper {
 //            .toSortedMap()
 //            .values
 //            .toList()
+
+        Log.w("ChartHelper", "Received GPA snapshots: $snapshots")
 
         val sorted = snapshots.sortedBy { it.dateAdded }
 
@@ -102,7 +105,7 @@ object ChartHelper {
             axisRight.isEnabled = false
             legend.isEnabled = false
 
-            setExtraOffsets(10f, 10f, 10f, 50f)
+            setExtraOffsets(10f, 10f, 30f, 50f)
             invalidate()
         }
     }

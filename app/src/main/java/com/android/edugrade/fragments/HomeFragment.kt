@@ -1,6 +1,7 @@
 package com.android.edugrade.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,11 @@ import com.android.edugrade.data.user.UserRepository
 import com.android.edugrade.databinding.FragmentHomeBinding
 import com.android.edugrade.util.SubjectBreakdownAdapter
 import com.android.edugrade.data.subject.SubjectStorage
+import com.android.edugrade.models.GpaSnapshot
 import com.android.edugrade.util.ChartHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,15 +49,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             adapter = breakdownAdapter
         }
 
-        userRepository.getGpaHistory { gpaHistory ->
-            ChartHelper.setupGpaLineChart(binding.gpaLineChart, gpaHistory)
-        }
-
         lifecycleScope.launch {
             binding.homeGpaCard.userCurrentGPA.text =
                 String.format("%.2f", userRepository.getCurrentGpa())
             binding.homeGpaCard.userTargetGPA.text =
                 String.format("%.2f", userRepository.getTargetGpa())
+
+            val currentGpa = userRepository.getCurrentGpa(false)
+            userRepository.getGpaHistory { gpaHistory ->
+                val withCurrentGpa = gpaHistory.toMutableList()
+                withCurrentGpa.add(GpaSnapshot(currentGpa, "Current"))
+
+                ChartHelper.setupGpaLineChart(binding.gpaLineChart, withCurrentGpa)
+            }
         }
 
         binding.homeSubjectBreakdownCard.subjectGradeBreakdownList.isNestedScrollingEnabled = false
