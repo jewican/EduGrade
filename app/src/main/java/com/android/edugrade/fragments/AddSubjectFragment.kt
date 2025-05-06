@@ -61,10 +61,12 @@ class AddSubjectFragment(
         }
 
         binding.addSubjectButton.setOnClickListener {
-            if (subjectStorage.getSubject(binding.generalCard.subjectCode.text.toString()).code.isNotEmpty()) {
+            if (subjectStorage.getSubject(binding.generalCard.subjectCode.text.toString()).code != "-") {
                 showDialog("Subject already exists!")
             } else {
-                saveSubject()
+                if (saveSubject()) {
+                    parentFragmentManager.popBackStack()
+                }
             }
         }
 
